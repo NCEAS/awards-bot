@@ -1,0 +1,19 @@
+Package: awardsBotADC
+Type: Package
+Title: What the package does (short line)
+Version: 1.0
+Date: 2018-06-18
+Author: Who wrote it
+Maintainer: Who to complain to <yourfault@somewhere.net>
+Description: Creates an NSF awards database for the Arctic Data Center. Sends correspondence to awardees.
+License: Apache License (== 2.0)
+Imports:
+  datamgmt,
+  dplyr,
+  keyring,
+  lubridate,
+  rt
+Remotes: 
+  NCEAS/datamgmt,
+  NCEAS/rt
+RoxygenNote: 6.0.1
