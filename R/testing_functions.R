@@ -21,7 +21,7 @@ create_blank_database <- function() {
                  "contact_1wk",
                  "adcPids")
    
-  blank_db <- data.frame(matrix(ncol = length(col_names), nrow = 0))
+  blank_db <- data.frame(matrix(ncol = length(col_names), nrow = 1))
   colnames(blank_db) <- col_names
   
   return(blank_db)

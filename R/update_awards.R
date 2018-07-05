@@ -1,17 +1,31 @@
+#' Read in awards 
+#' 
+#' Run this to get the awards database file 
+#' 
+#' @param DATABASE_PATH (character) globally defined 
+#' 
+#' @export
+import_awards_db <- function(DATABASE_PATH) {
+  tryCatch({
+    adc_nsf_awards <- utils::read.csv(DATABASE_PATH) %>% 
+      data.frame(stringsAsFactors = FALSE) %>%
+      apply(2, as.character) # force all fields into characters
+  },
+  error = function(e) {
+    slackr_bot("I failed to read in the awards database file")
+  })
+}
+
 #' Update Awards Database
 #' 
 #' Run this code to get the awards database with updated awards
 #'
-#' @param database_path (character) path to file containing database
-#' @param n_days (numeric) number of days to search backwards from the current day to get new awards 
+#' @param awards_db (data.frame) awards database to file containing database
+#' @param from_date (date) date to begin search from 
+#' @param to_date (date) date to end search at 
 #'
 #' @export
-update_awards <- function(DATABASE_PATH, from_date, to_date) {
-    
-  # Read in awards 
-  adc_nsf_awards <- utils::read.csv(DATABASE_PATH) %>% 
-    data.frame(apply(., 2, as.character), stringsAsFactors = FALSE) # force all fields into characters
-  
+update_awards <- function(awards_db, from_date, to_date) {
   
   ## format dates
   format <- "%m/%d/%Y"
@@ -20,12 +34,12 @@ update_awards <- function(DATABASE_PATH, from_date, to_date) {
   
   ## get new awards from NSF API
   new_nsf_awards <- datamgmt::get_awards(from_date = from_date, to_date = to_date)
-  new_nsf_awards <- new_nsf_awards[!(new_nsf_awards$id %in% adc_nsf_awards$id), ]
+  new_nsf_awards <- new_nsf_awards[!(new_nsf_awards$id %in% awards_db$id), ]
   
   ## combine awards
-  adc_nsf_awards <- suppressWarnings(dplyr::bind_rows(adc_nsf_awards, new_nsf_awards))
+  awards_db <- suppressWarnings(dplyr::bind_rows(awards_db, new_nsf_awards))
   
-  return(adc_nsf_awards)
+  return(awards_db)
 }
 
 
