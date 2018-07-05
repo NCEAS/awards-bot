@@ -10,7 +10,7 @@ update_awards <- function(DATABASE_PATH, from_date, to_date) {
     
   # Read in awards 
   adc_nsf_awards <- utils::read.csv(DATABASE_PATH) %>% 
-    data.frame(apply(adc_nsf_awards, 2, as.character), stringsAsFactors = FALSE) # force all fields into characters
+    data.frame(apply(., 2, as.character), stringsAsFactors = FALSE) # force all fields into characters
   
   
   ## format dates
@@ -36,26 +36,26 @@ update_awards <- function(DATABASE_PATH, from_date, to_date) {
 ## potentially there is a more elegant solution than the one here
 ## Forcing date columns to y-m-d
 
-is_date <- which(colnames(adc_nsf_awards) %in% c("date",
-                                                 "expDate",
-                                                 "startDate",
-                                                 "contact_initial",
-                                                 "contact_3mo",
-                                                 "contact_1mo",
-                                                 "contact_1wk"))
-
-adc_nsf_awards[, is_date] <- apply(adc_nsf_awards[, is_date], c(1,2), function(x){
-  if (!is.na(x)) {  
-    
-    ## if not NA try to reformat date from m-d-y to y-m-d
-    ## may need to test edge cases to ensure this always works
-    tryCatch({
-      paste0(lubridate::mdy(x))
-    }, warning = function(w) {
-      x
-    })
-    
-  } else {
-    NA
-  }
-})
+# is_date <- which(colnames(adc_nsf_awards) %in% c("date",
+#                                                  "expDate",
+#                                                  "startDate",
+#                                                  "contact_initial",
+#                                                  "contact_3mo",
+#                                                  "contact_1mo",
+#                                                  "contact_1wk"))
+# 
+# adc_nsf_awards[, is_date] <- apply(adc_nsf_awards[, is_date], c(1,2), function(x){
+#   if (!is.na(x)) {  
+#     
+#     ## if not NA try to reformat date from m-d-y to y-m-d
+#     ## may need to test edge cases to ensure this always works
+#     tryCatch({
+#       paste0(lubridate::mdy(x))
+#     }, warning = function(w) {
+#       x
+#     })
+#     
+#   } else {
+#     NA
+#   }
+# })
