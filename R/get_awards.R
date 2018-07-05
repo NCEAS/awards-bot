@@ -1,4 +1,4 @@
-#' Get Awards Database
+#' Update Awards Database
 #' 
 #' Run this code to get the awards database with updated awards
 #'
@@ -6,47 +6,15 @@
 #' @param n_days (numeric) number of days to search backwards from the current day to get new awards 
 #'
 #' @export
-get_awards <- function(database_path, n_days) {
+update_awards <- function(DATABASE_PATH, from_date, to_date) {
+    
+  # Read in awards 
+  adc_nsf_awards <- utils::read.csv(DATABASE_PATH) %>% 
+    data.frame(apply(adc_nsf_awards, 2, as.character), stringsAsFactors = FALSE) # force all fields into characters
   
-  ## get old awards ##
   
-  ## get database (if no database exists, for example during an initial setup return a blank data frame)
-  adc_nsf_awards <- tryCatch({
-    adc_nsf_awards <- utils::read.csv(database_path)
-    adc_nsf_awards <- data.frame(apply(adc_nsf_awards, 2, as.character), stringsAsFactors = FALSE) # force all fields into characters
-  }, error = function(e) {
-    ## set up columns for database
-    names_database <- c("awardee",
-                        "date",
-                        "expDate",
-                        "fundProgramName",
-                        "id",
-                        "piEmail",
-                        "piFirstName",
-                        "piLastName",
-                        "piPhone",
-                        "poName",
-                        "startDate",
-                        "title",
-                        "rtTicket",
-                        "piORCID",
-                        "contact_initial",
-                        "contact_3mo",
-                        "contact_1mo",
-                        "contact_1wk",
-                        "adcPids")
-    ## create a new data frame
-    adc_nsf_awards <- data.frame(matrix(ncol = length(names_database), nrow = 0))
-    colnames(adc_nsf_awards) <- names_database
-    adc_nsf_awards
-  })
-  
-  ## get new awards ##
-  
-  ## initiallize dates
+  ## format dates
   format <- "%m/%d/%Y"
-  to_date <- Sys.Date()
-  from_date <- to_date - n_days
   to_date <- format(to_date, format)
   from_date <- format(from_date, format)
   
@@ -91,4 +59,3 @@ get_awards <- function(database_path, n_days) {
   ## write output
   return(adc_nsf_awards)
 }
-
