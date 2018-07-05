@@ -28,7 +28,7 @@ create_blank_database <- function() {
 }
 
 write_blank_database <- function(path) {
-  stopifnotfile.exists(dirname(path))
+  stopifnot(file.exists(dirname(path)))
   
   db <- create_blank_database()
   write.csv(db, path, row.names = FALSE)
