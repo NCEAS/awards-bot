@@ -27,3 +27,14 @@ login_rt <- function(RT_username) {
                rt_base = "https://support.nceas.ucsb.edu/rt")
   
 }
+
+
+## For now this is simply going to be: 
+## login to RT
+# maybe suppress messages
+rt::rt_login(user = RT_USER,
+             pass = RT_PASS,
+             rt_base = RT_URL)
+
+## Write this function 
+check_rt_login()
