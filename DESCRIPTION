@@ -12,7 +12,9 @@ Imports:
   dplyr,
   keyring,
   lubridate,
-  rt
+  magrittr,
+  rt,
+  slackr
 Remotes: 
   NCEAS/datamgmt,
   NCEAS/rt
