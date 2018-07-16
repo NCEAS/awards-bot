@@ -1,1 +1,1 @@
-# awardsBotADC
+# awards_bot

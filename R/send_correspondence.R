@@ -8,11 +8,6 @@
 #' @export
 send_correspondence <- function(adc_nsf_awards, name) {
   
-  ## helper function to read in email templates
-  read_file <- function(path) {
-    suppressWarnings(paste0(readLines(path), collapse = "\n"))
-  }
-  
   ## send initial contact emails ##
   
   ## find which awards have not been contacted
@@ -51,7 +46,7 @@ send_correspondence <- function(adc_nsf_awards, name) {
   ## send emails
   for (i in contact_1mo) {
     
-    text <- sprintf(read_file(system.file("emails/contact_1mo", package = "awardsBotADC")),
+    text <- sprintf(read_file(system.file("emails/contact_initial", package = "awardsBotADC")),
                     adc_nsf_awards$piFirstName[i],
                     name,
                     adc_nsf_awards$id[i],
@@ -72,3 +67,18 @@ send_correspondence <- function(adc_nsf_awards, name) {
   return(adc_nsf_awards)
 }
 
+send_initial_correspondence <- function(awards_db) {
+  # Get awards without an initial correspondence
+  db <- awards_db[which(is.na(awards_db$contact_initial))]
+  
+}
+send_annual_report_correspondence <- function(awards_db, annual_report_time)
+send_aon_correspondence <- function(awards_db, aon_time)
+send_one_month_remaining <- function(awards_db, one_month_remaining_time)
+
+## helper function to read in email templates
+read_file <- function(path) {
+  suppressWarnings(paste0(readLines(path), collapse = "\n"))
+}
+
+#file <- file.path(system.file(package="awardsBotADC"), "contact_initial")
