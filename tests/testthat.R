@@ -1,4 +1,4 @@
 library(testthat)
-library(awards-bot)
+library(awardsBot)
 
-test_check("awards-bot")
+test_check("awardsBot")

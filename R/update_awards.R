@@ -43,6 +43,8 @@ update_awards <- function(awards_db, from_date, to_date) {
 }
 
 
+## TODO make a check_date_format() function 
+
 ## deal with dates ##
 
 ## this is needed if someone opens the database in excel and saves it as a csv, the dates format changes in this case
