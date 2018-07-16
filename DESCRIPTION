@@ -1,4 +1,4 @@
-Package: awardsBotADC
+Package: awardsBot
 Type: Package
 Title: What the package does (short line)
 Version: 1.0
@@ -10,7 +10,6 @@ License: Apache License (== 2.0)
 Imports:
   datamgmt,
   dplyr,
-  keyring,
   lubridate,
   magrittr,
   rt,
