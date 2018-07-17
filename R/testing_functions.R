@@ -35,3 +35,16 @@ write_blank_database <- function(path) {
   
   return(invisible())
 }
+
+create_dummy_database <- function() {
+  db <- create_dummy_database()
+  
+  db$piEmail <- "mullen@nceas.ucsb.edu"
+  db$piFirstName <- "Dominic"
+  db$piLastName <- "Mullen"
+  db$title <- "**Test** AwardBot Title"
+  db$fundProgramName <- "ARCTIC NATURAL SCIENCES"
+  db$id <- "1234567"  # NSF award number 
+  
+  return(db)
+}
