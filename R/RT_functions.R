@@ -1,71 +1,31 @@
-#' Send Correspondence
+#' Create New Tickets
 #' 
-#' Run this code to send new emails
+#' Run this code to create new ticket in the awards database
 #'
 #' @param adc_nsf_awards (data.frame) result of \code{get_awards}
-#' @param name (character) name of person to use as email sender
+#' @param test_requestor (character) optional email to use for requestor for testing purposes
 #'
 #' @export
-send_correspondence <- function(adc_nsf_awards, name) {
+create_ticket <- function(award, requestor) {
+  # TODO: add argument checks or is that overkill?
+  subject <- sprintf("Arctic Data Center NSF Award: %s",  award)
   
-  ## send initial contact emails ##
+  ticket <- rt::rt_ticket_create(queue = "arcticAwards",
+                                 requestor = requestor,
+                                 subject = subject,
+                                 rt_base = "https://support.nceas.ucsb.edu/rt")
   
-  ## find which awards have not been contacted
-  contact_initial <- which(is.na(adc_nsf_awards$contact_initial))
-  
-  ## send emails
-  for (i in contact_initial) {
-    
-  ## get email text
-  text <- sprintf(read_file(system.file("emails/contact_initial", package = "awardsBotADC")),
-          adc_nsf_awards$piFirstName[i],
-          adc_nsf_awards$id[i],
-          adc_nsf_awards$title[i],
-          name,
-          name)
-  
-  ## send reply
-  reply <- rt::rt_ticket_history_reply(ticket_id = adc_nsf_awards$rtTicket[i],
-                                       text = text,
-                                       cc = NULL,
-                                       bcc = NULL,
-                                       time_worked = NULL,
-                                       attachment_path = NULL,
-                                       rt_base = "https://support.nceas.ucsb.edu/rt")
-  
-  ## update database
-  adc_nsf_awards$contact_initial[i] <- paste0(Sys.Date())
+  if (ticket$status_code != 200) {
+    slackr_bot(sprintf("I failed to create a ticket for award: %s, from requestor: %s", award, requestor))
   }
   
-  ## send 1 month to go emails ##
+  # get ticket_id
+  ticket_id <- rawToChar(ticket$content) %>%
+    gsub("(.*Ticket )([[:digit:]]+)( created.*)", "\\2", .)
   
-  ## find which awards have not been contacted
-  contact_1mo <- which(is.na(adc_nsf_awards$contact_1mo))
-  contact_1mo <- which(as.numeric(Sys.Date() - as.Date(adc_nsf_awards$expDate[contact_1mo])) > -30)
-  
-  ## send emails
-  for (i in contact_1mo) {
-    
-    text <- sprintf(read_file(system.file("emails/contact_initial", package = "awardsBotADC")),
-                    adc_nsf_awards$piFirstName[i],
-                    name,
-                    adc_nsf_awards$id[i],
-                    adc_nsf_awards$title[i],
-                    name)
-    
-    reply <- rt::rt_ticket_history_reply(ticket_id = adc_nsf_awards$rtTicket[i],
-                                         text = text,
-                                         cc = NULL,
-                                         bcc = NULL,
-                                         time_worked = NULL,
-                                         attachment_path = NULL,
-                                         rt_base = "https://support.nceas.ucsb.edu/rt")
-    
-    adc_nsf_awards$contact_1mo[i] <- paste0(Sys.Date())
-  }
-  
-  return(adc_nsf_awards)
+  return(ticket_id)
 }
+
 
 send_initial_correspondence <- function(awards_db) {
   # Get awards without an initial correspondence
@@ -96,7 +56,11 @@ send_initial_correspondence <- function(awards_db) {
 
 send_annual_report_correspondence <- function(awards_db, annual_report_time)
 send_aon_correspondence <- function(awards_db, aon_time)
-send_one_month_remaining <- function(awards_db, one_month_remaining_time)
+send_one_month_remaining <- function(awards_db, one_month_remaining_time) {
+  ## find which awards have not been contacted
+  contact_1mo <- which(is.na(adc_nsf_awards$contact_1mo))
+  contact_1mo <- which(as.numeric(Sys.Date() - as.Date(adc_nsf_awards$expDate[contact_1mo])) > -30)
+}
   
 ## helper function to check RT replies
 check_rt_reply <- function(reply, rt_ticket_number) {
