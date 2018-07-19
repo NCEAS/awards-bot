@@ -42,7 +42,34 @@ update_awards <- function(awards_db, from_date, to_date) {
   return(awards_db)
 }
 
-update_annual_correspondence(awards_db, current_date)
+## TODO - put this in update_awards?
+set_first_annual_report_due_date <- function(awards_db, annual_report_time, current_date) {
+  indices <- which(is.na(awards_db$contact_annual_report_next))
+  db <- awards_db[indices,]
+  
+  # Initialize first annual report as 'annual_report_time' months after 'startDate'
+  startDate <- lubridate::ymd(db$startDate)
+  db$contact_annual_report_next <- startDate %m+% months(annual_report_time) %>%
+    as.character()
+  
+  awards_db[indices,] <- db
+  
+  return(awards_db)
+}
+
+update_annual_report_due_date <- function(awards_db) {
+  indices <- which(awards_db$contact_annual_report_previous == awards_db$contact_annual_report_next)
+  db <- awards_db[indices,]
+  
+  # Set next annual report date ahead 1 year
+  date <- lubridate::ymd(db$contact_annual_report_next)
+  db$contact_annual_report_next <- date %m+% months(12) %>%
+    as.character()
+  
+  awards_db[indices,] <- db
+  
+  return(awards_db)
+}
 
 #' this is needed if someone opens the database in excel and saves it as a csv, the dates format changes in this case
 #' Also NSF dates are m-d-y whereas R dates are y-m-d

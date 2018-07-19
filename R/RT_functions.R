@@ -45,7 +45,7 @@ create_ticket_and_send_initial_correspondence <- function(awards_db) {
   indices <- which(is.na(awards_db$contact_initial)) # save indices to re-merge
   db <- awards_db[indices,]
   
-  for (i in seq_along(nrow(db))) {
+  for (i in seq_len(nrow(db))) {
     # Create RT ticket
     db$rtTicket[i] <- create_ticket(db$id[i], db$piEmail[i])
     if (db$rtTicket[i] == "rt_ticket_create_error") {
@@ -77,7 +77,7 @@ send_annual_report_correspondence <- function(awards_db, current_date) {
   indices <- which(awards_db$contact_annual_report_next == as.character(current_date)) # save indices to re-merge
   db <- awards_db[indices,]
   
-  for (i in seq_along(nrow(db))) {
+  for (i in seq_len(nrow(db))) {
     # Create correspondence text 
     template <- read_file(file.path(system.file(package = "awardsBot"), "emails/contact_annual_report"))
     text <- sprintf(template,
