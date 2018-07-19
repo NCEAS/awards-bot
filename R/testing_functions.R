@@ -16,6 +16,9 @@ create_blank_database <- function() {
                  "rtTicket",
                  "piORCID",
                  "contact_initial",
+                 "contact_annual_report_previous",
+                 "contact_annual_report_next",
+                 "contact_aon",
                  "contact_3mo",
                  "contact_1mo",
                  "contact_1wk",
@@ -34,4 +37,17 @@ write_blank_database <- function(path) {
   write.csv(db, path, row.names = FALSE)
   
   return(invisible())
+}
+
+create_dummy_database <- function() {
+  db <- create_blank_database()
+  
+  db$piEmail <- "mullen@nceas.ucsb.edu"
+  db$piFirstName <- "Dominic"
+  db$piLastName <- "Mullen"
+  db$title <- "**Test** AwardBot Title"
+  db$fundProgramName <- "ARCTIC NATURAL SCIENCES"
+  db$id <- "1234567"  # NSF award number 
+  
+  return(db)
 }
