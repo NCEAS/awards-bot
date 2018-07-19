@@ -1,5 +1,8 @@
 ## Main 
 
+# Set up environment variables 
+#readRenviron("/home/dmullen/R/awardsBot_env.R")
+
 # import database 
 
 # update database 

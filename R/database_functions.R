@@ -43,7 +43,7 @@ update_awards <- function(awards_db, from_date, to_date) {
 }
 
 ## TODO - put this in update_awards?
-set_first_annual_report_due_date <- function(awards_db, annual_report_time, current_date) {
+set_first_annual_report_due_date <- function(awards_db, annual_report_time) {
   indices <- which(is.na(awards_db$contact_annual_report_next))
   db <- awards_db[indices,]
   

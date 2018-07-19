@@ -19,3 +19,9 @@ test_that("update_awards does not overwrite existing rows", {
   expect_equal(db$contact_3mo[2], "2018-07-05")
 })
 
+test_that("we can set an intial annual report due dates", {
+  db <- read.csv(file.path(system.file(package = "awardsBot"), "example_db.csv"))
+  db <- set_first_annual_report_due_date()
+  
+})
+

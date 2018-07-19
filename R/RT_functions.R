@@ -18,7 +18,7 @@ create_ticket <- function(award, requestor) {
   
   if (!grepl("created", httr::content(ticket))) {
     message <- sprintf("I failed to create a ticket for award: %s, from requestor: %s", award, requestor)
-    slackr_bot(message)
+    slackr::slackr_bot(message)
     return("rt_ticket_create_error")
   }
   
@@ -113,12 +113,12 @@ send_one_month_remaining <- function(awards_db, one_month_remaining_time) {
 check_rt_reply <- function(reply, rt_ticket_number) {
   if (reply$status_code != 200) {
     message <- sprintf("I failed to reply on: %s, with status code: %s", rt_ticket_number, reply$status_code)
-    slackr_bot(message)
+    slackr::slackr_bot(message)
   }
   content <- httr::content(reply)
   if (!grepl("Correspondence added", content)) {
     message <- paste0("I failed to send a correspondence on ticket: ", rt_ticket_number)
-    slackr_bot(message)
+    slackr::slackr_bot(message)
   }
 } 
 
