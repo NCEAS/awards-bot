@@ -18,7 +18,8 @@ create_blank_database <- function() {
                  "contact_initial",
                  "contact_annual_report_previous",
                  "contact_annual_report_next",
-                 "contact_aon",
+                 "contact_aon_previous",
+                 "contact_aon_next",
                  "contact_3mo",
                  "contact_1mo",
                  "contact_1wk",
@@ -39,6 +40,12 @@ write_blank_database <- function(path) {
   return(invisible())
 }
 
+write_inst_database <- function() {
+  db <- create_blank_database()
+  db <- read.csv(file.path(system.file(package = "awardsBot"), "example_db.csv"))
+  db <- check_date_format(db)
+}
+
 create_dummy_database <- function() {
   db <- create_blank_database()
   
@@ -48,6 +55,7 @@ create_dummy_database <- function() {
   db$title <- "**Test** AwardBot Title"
   db$fundProgramName <- "ARCTIC NATURAL SCIENCES"
   db$id <- "1234567"  # NSF award number 
+  db$startDate <- "2016-01-01"
   
   return(db)
 }

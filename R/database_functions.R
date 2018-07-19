@@ -57,6 +57,7 @@ set_first_annual_report_due_date <- function(awards_db, annual_report_time) {
   return(awards_db)
 }
 
+
 update_annual_report_due_date <- function(awards_db) {
   indices <- which(awards_db$contact_annual_report_previous == awards_db$contact_annual_report_next)
   db <- awards_db[indices,]
@@ -76,8 +77,18 @@ update_annual_report_due_date <- function(awards_db) {
 #' potentially there is a more elegant solution than the one here
 #' Forcing date columns to y-m-d
 check_date_format <- function(awards_db) {
-  is_date <- which(colnames(awards_db) %in% c("date", "expDate", "startDate", "contact_initial",
-                                              "contact_3mo", "contact_1mo", "contact_1wk"))
+  is_date <- which(colnames(awards_db) %in% c("date",
+                                              "expDate",
+                                              "startDate",
+                                              "contact_initial",
+                                              "contact_annual_report_previous",
+                                              "contact_annual_report_next",
+                                              "contact_aon_previous",
+                                              "contact_aon_next",
+                                              "contact_3mo",
+                                              "contact_1mo",
+                                              "contact_1wk"))
+  
   awards_db[, is_date] <- apply(awards_db[, is_date], c(1,2), function(x){
     if (!is.na(x)) {  
       
@@ -98,4 +109,5 @@ check_date_format <- function(awards_db) {
 }
 
 ## TODO make a check_database() function
-## can't have any NA db$expDate values
+## can't have any NA db$expDate values, or startDate
+# - probably can't have any NA date values for functions to work 
