@@ -42,36 +42,31 @@ update_awards <- function(awards_db, from_date, to_date) {
   return(awards_db)
 }
 
+#' this is needed if someone opens the database in excel and saves it as a csv, the dates format changes in this case
+#' Also NSF dates are m-d-y whereas R dates are y-m-d
+#' potentially there is a more elegant solution than the one here
+#' Forcing date columns to y-m-d
+check_date_format <- function(awards_db) {
+  is_date <- which(colnames(awards_db) %in% c("date", "expDate", "startDate", "contact_initial",
+                                              "contact_3mo", "contact_1mo", "contact_1wk"))
+  awards_db[, is_date] <- apply(awards_db[, is_date], c(1,2), function(x){
+    if (!is.na(x)) {  
+      
+      ## if not NA try to reformat date from m-d-y to y-m-d
+      ## TODO need to test edge cases to ensure this always works
+      tryCatch({
+        paste0(lubridate::mdy(x))
+      }, warning = function(w) {
+        x
+      })
+      
+    } else {
+      NA
+    }
+  })
+  
+  return(awards_db)
+}
 
-## TODO make a check_date_format() function 
-
-## deal with dates ##
-
-## this is needed if someone opens the database in excel and saves it as a csv, the dates format changes in this case
-## Also NSF dates are m-d-y whereas R dates are y-m-d
-## potentially there is a more elegant solution than the one here
-## Forcing date columns to y-m-d
-
-# is_date <- which(colnames(adc_nsf_awards) %in% c("date",
-#                                                  "expDate",
-#                                                  "startDate",
-#                                                  "contact_initial",
-#                                                  "contact_3mo",
-#                                                  "contact_1mo",
-#                                                  "contact_1wk"))
-# 
-# adc_nsf_awards[, is_date] <- apply(adc_nsf_awards[, is_date], c(1,2), function(x){
-#   if (!is.na(x)) {  
-#     
-#     ## if not NA try to reformat date from m-d-y to y-m-d
-#     ## may need to test edge cases to ensure this always works
-#     tryCatch({
-#       paste0(lubridate::mdy(x))
-#     }, warning = function(w) {
-#       x
-#     })
-#     
-#   } else {
-#     NA
-#   }
-# })
+## TODO make a check_database() function
+## can't have any NA db$expDate values

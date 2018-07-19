@@ -1,4 +1,4 @@
-context("Update NSF awards database")
+context("NSF awards database functions")
 
 test_that("update_awards updates an existing database with NSF API information", {
   db <- create_blank_database()
