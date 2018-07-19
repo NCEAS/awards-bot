@@ -1,22 +1,25 @@
 #' Create New Tickets
 #' 
-#' Run this code to create new ticket in the awards database
+#' Run this code to create a new RT ticket based off NSF award number and requestor
+#' (PI) email.  Requires a valid RT login in order to run.  
 #'
-#' @param adc_nsf_awards (data.frame) result of \code{get_awards}
-#' @param test_requestor (character) optional email to use for requestor for testing purposes
+#' @param award (character) NSF award number.
+#' @param requestor (character) PI email
+#' 
+#' @return ticket_id (character) Newly generated RT ticket id
 #'
 #' @export
 create_ticket <- function(award, requestor) {
-  # TODO: add argument checks or is that overkill?
   subject <- sprintf("Arctic Data Center NSF Award: %s",  award)
-  
   ticket <- rt::rt_ticket_create(queue = "arcticAwards",
                                  requestor = requestor,
                                  subject = subject,
                                  rt_base = "https://support.nceas.ucsb.edu/rt")
   
-  if (ticket$status_code != 200) {
-    slackr_bot(sprintf("I failed to create a ticket for award: %s, from requestor: %s", award, requestor))
+  if (!grepl("created", httr::content(ticket))) {
+    message <- sprintf("I failed to create a ticket for award: %s, from requestor: %s", award, requestor)
+    slackr_bot(message)
+    return("rt_ticket_create_error")
   }
   
   # get ticket_id
@@ -26,15 +29,30 @@ create_ticket <- function(award, requestor) {
   return(ticket_id)
 }
 
-
-send_initial_correspondence <- function(awards_db) {
+#' Create New Tickets and send initial correspondences 
+#' 
+#' Run this code to create new RT tickets and send an initial correspondence, based 
+#' off a database of new NSF awards.  The database must include: fundProgramName,
+#' piEmail, piFirstName, id (NSF award #), title (NSF award title).  
+#'
+#' @param awards (data.frame) database of NSF awards pulled from NSF-API using datamgmt::get_awards
+#'
+#' @return awards_db (data.frame) The initial database with updated RT ticket numbers
+#'
+#' @export
+create_ticket_and_send_initial_correspondence <- function(awards_db) {
   # Get awards without an initial correspondence
   indices <- which(is.na(awards_db$contact_initial)) # save indices to re-merge
   db <- awards_db[indices,]
   
   for (i in seq_along(nrow(db))) {
+    # Create RT ticket
+    db$rtTicket[i] <- create_ticket(db$id[i], db$piEmail[i])
+    if (db$rtTicket[i] == "rt_ticket_create_error") {
+      next 
+    }
+    # Create correspondence text 
     template <- read_initial_template(db$fundProgramName[i])
-    # Create email text 
     text <- sprintf(template,
                     db$piFirstName[i],
                     db$id[i],
@@ -43,9 +61,9 @@ send_initial_correspondence <- function(awards_db) {
     reply <- rt::rt_ticket_history_reply(ticket_id = db$rtTicket[i],
                                          text = text,
                                          rt_base = "https://support.nceas.ucsb.edu/rt")
-    check_rt_reply(reply, db$rtTicket)
+    check_rt_reply(reply, db$rtTicket[i])
     
-    db$contact_initial[i] <- FROM_DATE
+    db$contact_initial[i] <- as.character(Sys.Date())
   }
   
   # re-merge temporary database into permanent
@@ -54,7 +72,36 @@ send_initial_correspondence <- function(awards_db) {
   return(awards_db)
 }
 
-send_annual_report_correspondence <- function(awards_db, annual_report_time)
+send_annual_report_correspondence <- function(awards_db, current_date) {
+  # Get awards to send annual report correspondence 
+  indices <- which(awards_db$contact_annual_report_next == as.character(current_date)) # save indices to re-merge
+  db <- awards_db[indices,]
+  
+  for (i in seq_along(nrow(db))) {
+    # Create correspondence text 
+    template <- read_file(file.path(system.file(package = "awardsBot"), "emails/contact_annual_report"))
+    text <- sprintf(template,
+                    db$piFirstName[i])
+    
+    reply <- rt::rt_ticket_history_reply(ticket_id = db$rtTicket[i],
+                                         text = text,
+                                         rt_base = "https://support.nceas.ucsb.edu/rt")
+    check_rt_reply(reply, db$rtTicket[i])
+    
+    # Update last contact date
+    db$contact_annual_report_previous[i] <- db$contact_annual_report_next[i]
+  }
+  
+  # re-merge temporary database into permanent
+  awards_db[indices,] <- db
+  
+  ## TODO
+  # add function that updates annual report correspondence times
+  
+  return(awards_db)
+}
+
+
 send_aon_correspondence <- function(awards_db, aon_time)
 send_one_month_remaining <- function(awards_db, one_month_remaining_time) {
   ## find which awards have not been contacted
@@ -65,12 +112,13 @@ send_one_month_remaining <- function(awards_db, one_month_remaining_time) {
 ## helper function to check RT replies
 check_rt_reply <- function(reply, rt_ticket_number) {
   if (reply$status_code != 200) {
-    slackr_bot(paste0("I failed to reply on: ", rt_ticket_number, " with status code: ",
-                      reply$status_code))
+    message <- sprintf("I failed to reply on: %s, with status code: %s", rt_ticket_number, reply$status_code)
+    slackr_bot(message)
   }
-  content <- rawToChar(reply$content)
+  content <- httr::content(reply)
   if (!grepl("Correspondence added", content)) {
-    slackr_bot(paste0("I failed to send a correspondence on ticket: ", rt_ticket_number))
+    message <- paste0("I failed to send a correspondence on ticket: ", rt_ticket_number)
+    slackr_bot(message)
   }
 } 
 
@@ -97,4 +145,19 @@ read_initial_template <- function(fundProgramName) {
   
   template <- read_file(path)
   return(template)
+}
+
+
+## Helper function to check if RT is logged in 
+check_rt_login <- function(rt_base) {
+  base_api <- paste(stringr::str_replace(rt_base, "\\/$", ""),
+                    "REST", "1.0", sep = "/")
+  content <- httr::GET(base_api) %>%
+    httr::content()
+  
+  if (stringr::str_detect(content, "Credentials required")) {
+    return(FALSE)
+  } else {
+    return(TRUE)
+  }
 }

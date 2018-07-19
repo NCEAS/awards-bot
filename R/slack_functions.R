@@ -4,8 +4,8 @@
 # SLACKWEBHOOK_URL
 
 # Set ennvironment variables 
-# slackr_setup(channel = "#awardbot", username = "awardbot",
-#              incoming_webhook_url = SLACK_WEBHOOK_URL)
+slackr_setup(channel = "#awardbot", username = "awardbot",
+             incoming_webhook_url = SLACK_WEBHOOK_URL)
 
 # Test slack 
 test_slack <- function() {
