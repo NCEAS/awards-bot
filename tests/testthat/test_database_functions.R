@@ -39,4 +39,3 @@ test_that("we can update annual report due dates", {
   
   expect_equal(db$contact_annual_report_next, c("2020-03-01", "2020-05-01"))
 })
-

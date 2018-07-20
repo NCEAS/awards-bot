@@ -29,6 +29,7 @@ create_ticket <- function(award, requestor) {
   return(ticket_id)
 }
 
+
 #' Create New Tickets and send initial correspondences 
 #' 
 #' Run this code to create new RT tickets and send an initial correspondence, based 
@@ -72,6 +73,7 @@ create_ticket_and_send_initial_correspondence <- function(awards_db) {
   return(awards_db)
 }
 
+
 send_annual_report_correspondence <- function(awards_db, current_date) {
   # Get awards to send annual report correspondence 
   indices <- which(awards_db$contact_annual_report_next == as.character(current_date)) # save indices to re-merge
@@ -102,12 +104,65 @@ send_annual_report_correspondence <- function(awards_db, current_date) {
 }
 
 
-send_aon_correspondence <- function(awards_db, aon_time)
-send_one_month_remaining <- function(awards_db, one_month_remaining_time) {
-  ## find which awards have not been contacted
-  contact_1mo <- which(is.na(adc_nsf_awards$contact_1mo))
-  contact_1mo <- which(as.numeric(Sys.Date() - as.Date(adc_nsf_awards$expDate[contact_1mo])) > -30)
+send_aon_correspondence <- function(awards_db, aon_time){}
+
+  
+send_one_month_remaining_correspondence <- function(awards_db) {
+  dates <- as.character((as.Date(db$expDate) %m+% months(-1)))
+  indices <- which(dates == as.character(Sys.Date()))
+  db <- awards_db[indices,]
+  
+  for (i in seq_len(nrow(db))) {
+    # Create correspondence text 
+    template <- read_file(file.path(system.file(package = "awardsBot"), "emails/contact_1mo"))
+    text <- sprintf(template,
+                    db$piFirstName[i],
+                    db$id[i],
+                    db$title[i])
+    
+    reply <- rt::rt_ticket_history_reply(ticket_id = db$rtTicket[i],
+                                         text = text,
+                                         rt_base = "https://support.nceas.ucsb.edu/rt")
+    check_rt_reply(reply, db$rtTicket[i])
+    
+    # Update last contact date
+    db$contact_1mo[i] <- as.character(Sys.Date())
+  }
+  
+  # re-merge temporary database into permanent
+  awards_db[indices,] <- db
+
+  return(awards_db)
 }
+  
+#' General function that sends a correspondence based on a specified time
+#' 
+#' This function sends a correspondence based on a specified time interval from 
+#' the startDate or the expDate.  You can specify which direction in time you'd like
+#' to go based on the starting point, as well as the time interval in years, months,
+#' and days.  
+#' @param 
+send_correspondence_at_time_x <- function(awards_db,
+                                          starting_point,
+                                          direction,
+                                          years = 0,
+                                          months = 0, 
+                                          days = 0,
+                                          rtTicket, text) {
+  if (!(starting_point %in% c("startDate", "expDate"))) {
+    stop("starting point must be one of 'startDate' or 'expDate'")
+  }
+  if (!is.numeric(c(years, months, days))) {
+    stop("'years', 'months', and 'days' arguments must be numeric")
+  } 
+  
+  db <- awards_db
+  dates <- as.Date(db[[starting_point]])
+  time_int <- period(c(days, months, years), c("day", "month", "year"))
+  dates + time_int
+  
+}
+
   
 ## helper function to check RT replies
 check_rt_reply <- function(reply, rt_ticket_number) {
@@ -140,7 +195,7 @@ read_initial_template <- function(fundProgramName) {
   }
   
   if (!file.exists(path)) {
-    slackr::slackr_bot("I failed to read in a contact_initial email template, please check that the file paths returned by 'awardsBot::read_initial_template' all exist.")
+    slackr::slackr_bot("I failed to read in a contact_initial email template, please check that the file paths used by 'awardsBot::read_initial_template' all exist.")
   }
   
   template <- read_file(path)
@@ -161,3 +216,5 @@ check_rt_login <- function(rt_base) {
     return(TRUE)
   }
 }
+
+## TODO write send_correspondence function that takes extra arguments

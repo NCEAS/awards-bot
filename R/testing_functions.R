@@ -41,9 +41,11 @@ write_blank_database <- function(path) {
 }
 
 write_inst_database <- function() {
-  db <- create_blank_database()
-  db <- read.csv(file.path(system.file(package = "awardsBot"), "example_db.csv"))
-  db <- check_date_format(db)
+  db <- create_blank_database() %>%
+    update_awards(from_date = as.Date("2018-06-28"), to_date = as.Date("2018-07-05")) %>%
+    check_date_format() %>%
+    apply(2, as.character) 
+  write.csv(db[2:3,], file.path(system.file(package = "awardsBot"), "example_db.csv"))
 }
 
 create_dummy_database <- function() {

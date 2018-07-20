@@ -49,9 +49,24 @@ test_that("we can send an annual report correspondence", {
   
   db <- create_dummy_database()
   db <- create_ticket_and_send_initial_correspondence(db)
+  db$contact_annual_report_next <- as.character(Sys.Date())
   db <- send_annual_report_correspondence(db, Sys.Date())
   
   expect_equal(db$contact_annual_report_next, db$contact_annual_report_previous)
+})
+
+test_that("we can send a one month remaining correspondence",{
+  if (!check_rt_login(rt_url)) {
+    skip("Not logged in to RT. Skipping Test.")
+  }
+  
+  db <- create_dummy_database()
+  db <- create_ticket_and_send_initial_correspondence(db)
+  # Set expiration date to one month from now
+  db$expDate <- as.character(Sys.Date() %m+% months(1))
+  db <- send_one_month_remaining_correspondence(db)
+  
+  expect_equal(db$contact_1mo, as.character(Sys.Date()))
 })
 
 test_that("one error in the database does not the initial contact for loop", {

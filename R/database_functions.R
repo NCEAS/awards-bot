@@ -64,7 +64,7 @@ update_annual_report_due_date <- function(awards_db) {
   
   # Set next annual report date ahead 1 year
   date <- lubridate::ymd(db$contact_annual_report_next)
-  db$contact_annual_report_next <- date %m+% months(12) %>%
+  db$contact_annual_report_next <- (date + lubridate::years(1)) %>%
     as.character()
   
   awards_db[indices,] <- db
