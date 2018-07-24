@@ -31,6 +31,7 @@ create_blank_database <- function() {
   return(blank_db)
 }
 
+
 write_blank_database <- function(path) {
   stopifnot(file.exists(dirname(path)))
   
@@ -40,6 +41,7 @@ write_blank_database <- function(path) {
   return(invisible())
 }
 
+
 write_inst_database <- function() {
   db <- create_blank_database() %>%
     update_awards(from_date = as.Date("2018-06-28"), to_date = as.Date("2018-07-05")) %>%
@@ -47,6 +49,7 @@ write_inst_database <- function() {
     apply(2, as.character) 
   write.csv(db[2:3,], file.path(system.file(package = "awardsBot"), "example_db.csv"))
 }
+
 
 create_dummy_database <- function() {
   db <- create_blank_database()
@@ -60,4 +63,12 @@ create_dummy_database <- function() {
   db$startDate <- "2016-01-01"
   
   return(db)
+}
+
+
+with_dir <- function(directory, expr) {
+  old_wd <- getwd()
+  on.exit(setwd(old_wd))
+  setwd(directory)
+  evalq(expr)
 }

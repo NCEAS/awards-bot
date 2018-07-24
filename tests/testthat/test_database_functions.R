@@ -39,3 +39,31 @@ test_that("we can update annual report due dates", {
   
   expect_equal(db$contact_annual_report_next, c("2020-03-01", "2020-05-01"))
 })
+
+test_that("we can read in the last time the bot ran", {
+  # with_dir runs the tests in tempdir() and then resets to the previous wd
+  with_dir(tempdir(), {
+    Sys.setenv(LASTRUN = "LASTRUN")
+    file <- file.path(tempdir(), Sys.getenv("LASTRUN"))
+    
+    writeLines(as.character(Sys.Date()), file)
+    last_run <- get_last_run()
+    
+    expect_equal(last_run, Sys.Date())
+  })
+})
+
+test_that("get_last_run errors gracefully", {})
+
+test_that("we can save the last time the bot ran", {
+  # with_dir runs the tests in tempdir() and then resets to the previous wd
+  with_dir(tempdir(), {
+  Sys.setenv(LASTRUN = "LASTRUN")
+  file <- file.path(tempdir(), Sys.getenv("LASTRUN"))
+  
+  writeLines("dummy text", file)
+  save_last_run("text to save")
+  
+  expect_equal(readLines(file), "text to save")
+  })
+})

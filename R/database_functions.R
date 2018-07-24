@@ -108,6 +108,28 @@ check_date_format <- function(awards_db) {
   return(awards_db)
 }
 
-## TODO make a check_database() function
+
+get_last_run <- function() {
+  last_run <- NULL
+  file_path <- file.path(getwd(), Sys.getenv("LASTRUN"))
+
+  if (file.exists(file_path)) {
+    last_run <- as.Date(readLines(file_path, n = 1))
+  } 
+  if (is.null(last_run)) {
+    slackr::slackr_bot("I failed to read in my LASTRUN time. Setting LASTRUN to Sys.Date()")
+    last_run <- Sys.Date()
+  }
+  
+  return(last_run)
+}
+
+
+save_last_run <- function(last_run) {
+  file_path <- file.path(getwd(), Sys.getenv("LASTRUN"))
+  writeLines(last_run, file_path)
+}
+
+# TODO make a check_database() function
 ## can't have any NA db$expDate values, or startDate
 # - probably can't have any NA date values for functions to work 

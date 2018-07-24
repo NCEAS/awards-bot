@@ -3,6 +3,14 @@
 # Set up environment variables 
 #readRenviron("/home/dmullen/R/awardsBot_env.R")
 
+# Source the bot 
+remotes::install_github("NCEAS/awards-bot")
+library(awardsBot)
+
+# Read in LASTRUN
+
+# Log in to RT 
+
 # import database 
 
 # update database 
