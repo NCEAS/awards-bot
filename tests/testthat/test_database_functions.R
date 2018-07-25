@@ -68,7 +68,7 @@ test_that("we can save the last time the bot ran", {
   writeLines("dummy text", file_path)
   save_lastrun("text to save", file_path)
   
-  expect_equal(readLines(file), "text to save")
+  expect_equal(readLines(file_path), "text to save")
 })
 
 test_that("update_contact_dates wrapper works", {})

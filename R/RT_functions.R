@@ -188,7 +188,8 @@ send_correspondence_at_time_x <- function(awards_db,
   
 }
 
-## Wrapper function that sends all correspondences 
+#' Wrapper function that sends all correspondences
+#' @importFrom magrittr "%>%" 
 send_correspondences <- function(awards_db) {
   awards_db <- create_ticket_and_send_initial_correspondence(awards_db) %>%
     send_annual_report_correspondence() %>%

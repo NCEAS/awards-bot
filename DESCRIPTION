@@ -10,10 +10,12 @@ License: Apache License (== 2.0)
 Imports:
   datamgmt,
   dplyr,
+  httr,
   lubridate,
   magrittr,
   rt,
-  slackr
+  slackr,
+  stringr
 Remotes: 
   NCEAS/datamgmt,
   NCEAS/rt

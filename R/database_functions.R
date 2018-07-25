@@ -90,7 +90,7 @@ update_annual_report_due_date <- function(awards_db) {
 
 
 set_first_aon_data_due_date <- function(awards_db, initial_aon_offset){
-  indices <- which((is.na(awards_db$contact_aon_next) & grepl("AON", db$fundProgramName)))
+  indices <- which((is.na(awards_db$contact_aon_next) & grepl("AON", awards_db$fundProgramName)))
   db <- awards_db[indices,]
   
   # Initialize first aon submissions as 'initial_aon_offset' months after 'startDate'
@@ -103,7 +103,8 @@ set_first_aon_data_due_date <- function(awards_db, initial_aon_offset){
   return(awards_db)
 }
 
-
+#' Update AON data due dates
+#' @importFrom lubridate "%m+%"
 update_aon_data_due_date <- function(awards_db, aon_recurring_interval) {
   indices <- which(awards_db$contact_aon_previous == awards_db$contact_aon_next)
   db <- awards_db[indices,]
