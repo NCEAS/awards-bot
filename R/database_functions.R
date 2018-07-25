@@ -8,8 +8,8 @@
 import_awards_db <- function(DATABASE_PATH) {
   tryCatch({
     adc_nsf_awards <- utils::read.csv(DATABASE_PATH) %>% 
-      data.frame(stringsAsFactors = FALSE) %>%
-      apply(2, as.character) # force all fields into characters
+      apply(2, as.character) %>% # force all fields into characters
+      data.frame(stringsAsFactors = FALSE)
   },
   error = function(e) {
     slackr_bot("I failed to read in the awards database file")
@@ -71,6 +71,37 @@ update_annual_report_due_date <- function(awards_db) {
   
   return(awards_db)
 }
+
+
+set_first_aon_data_due_date <- function(awards_db, initial_aon_offset){
+  indices <- which((is.na(awards_db$contact_aon_next) & grepl("AON", db$fundProgramName)))
+  db <- awards_db[indices,]
+  
+  # Initialize first aon submissions as 'initial_aon_offset' months after 'startDate'
+  startDate <- lubridate::ymd(db$startDate)
+  db$contact_aon_next <- startDate %m+% months(initial_aon_offset) %>%
+    as.character()
+  
+  awards_db[indices,] <- db
+  
+  return(awards_db)
+}
+
+
+update_aon_data_due_date <- function(awards_db, aon_recurring_interval) {
+  indices <- which(awards_db$contact_aon_previous == awards_db$contact_aon_next)
+  db <- awards_db[indices,]
+  
+  # Set next aon data due date ahead 'aon_recurring_interval' months
+  date <- lubridate::ymd(db$contact_aon_next)
+  db$contact_aon_next <- (date %m+% months(aon_recurring_interval)) %>%
+    as.character()
+  
+  awards_db[indices,] <- db
+  
+  return(awards_db)
+}
+
 
 #' this is needed if someone opens the database in excel and saves it as a csv, the dates format changes in this case
 #' Also NSF dates are m-d-y whereas R dates are y-m-d

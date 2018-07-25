@@ -20,24 +20,37 @@ test_that("update_awards does not overwrite existing rows", {
 })
 
 test_that("we can set intial annual report due dates", {
-  # Read in environmental contact times
-  readRenviron(file.path(system.file(package = "awardsBot"), "contact_times"))
-  annual_report_time <- as.numeric(Sys.getenv("ANNUAL_REPORT_TIME"))
-  
   db <- read.csv(file.path(system.file(package = "awardsBot"), "example_db.csv"))
-  db <- set_first_annual_report_due_date(db, annual_report_time)
+  db <- set_first_annual_report_due_date(db, annual_report_time = 8)
   
   expect_equal(db$contact_annual_report_next, c("2019-03-01", "2019-05-01"))
 })
 
 test_that("we can update annual report due dates", {
-  db <- read.csv(file.path(system.file(package = "awardsBot"), "example_db.csv"))
+  db <- import_awards_db(file.path(system.file("example_db.csv", package = "awardsBot")))
   
-  db <- set_first_annual_report_due_date(db, annual_report_time)
+  db <- set_first_annual_report_due_date(db, annual_report_time = 8)
   db$contact_annual_report_previous <- db$contact_annual_report_next
   db <- update_annual_report_due_date(db)
   
   expect_equal(db$contact_annual_report_next, c("2020-03-01", "2020-05-01"))
+})
+
+test_that("we can set initial aon data due dates", {
+  db <- import_awards_db(file.path(system.file(package = "awardsBot"), "example_db.csv"))
+  db <- set_first_aon_data_due_date(db, aon_time = 11)
+  
+  expect_equal(db$contact_aon_next, c("2019-06-01", NA))
+})
+
+test_that("we can update aon data due dates", {
+  db <- import_awards_db(file.path(system.file(package = "awardsBot"), "example_db.csv"))
+  
+  db <- set_first_aon_data_due_date(db, aon_time = 11)
+  db$contact_aon_previous <- db$contact_aon_next
+  db <- update_aon_data_due_date(db, aon_recurring_interval = 6)
+  
+  expect_equal(db$contact_aon_next, c("2019-12-01", NA))
 })
 
 test_that("we can read in the last time the bot ran", {

@@ -74,14 +74,15 @@ create_ticket_and_send_initial_correspondence <- function(awards_db) {
 }
 
 
-send_annual_report_correspondence <- function(awards_db, current_date) {
+send_annual_report_correspondence <- function(awards_db) {
   # Get awards to send annual report correspondence 
-  indices <- which(awards_db$contact_annual_report_next == as.character(current_date)) # save indices to re-merge
+  current_date <- as.character(Sys.Date())
+  indices <- which(awards_db$contact_annual_report_next == current_date) # save indices to re-merge
   db <- awards_db[indices,]
   
   for (i in seq_len(nrow(db))) {
     # Create correspondence text 
-    template <- read_file(file.path(system.file(package = "awardsBot"), "emails/contact_annual_report"))
+    template <- read_file(file.path(system.file("emails", "contact_annual_report", package = "awardsBot")))
     text <- sprintf(template,
                     db$piFirstName[i])
     
@@ -104,7 +105,31 @@ send_annual_report_correspondence <- function(awards_db, current_date) {
 }
 
 
-send_aon_correspondence <- function(awards_db, aon_time){}
+send_aon_correspondence <- function(awards_db){
+  current_date <- as.character(Sys.Date())
+  indices <- which(awards_db$contact_aon_next == current_date)
+  db <- awards_db[indices,]
+  
+  for (i in seq_len(nrow(db))) {
+    # Create correspondence text 
+    template <- read_file(file.path(system.file("emails", "contact_aon", package = "awardsBot")))
+    text <- sprintf(template,
+                    db$piFirstName[i])
+    
+    reply <- rt::rt_ticket_history_reply(ticket_id = db$rtTicket[i],
+                                         text = text,
+                                         rt_base = "https://support.nceas.ucsb.edu/rt")
+    check_rt_reply(reply, db$rtTicket[i])
+    
+    # Update last contact date
+    db$contact_aon_previous[i] <- db$contact_aon_next[i]
+  }
+  
+  # re-merge temporary database into permanent
+  awards_db[indices,] <- db
+  
+  return(awards_db)
+}
 
   
 send_one_month_remaining_correspondence <- function(awards_db) {
@@ -114,7 +139,7 @@ send_one_month_remaining_correspondence <- function(awards_db) {
   
   for (i in seq_len(nrow(db))) {
     # Create correspondence text 
-    template <- read_file(file.path(system.file(package = "awardsBot"), "emails/contact_1mo"))
+    template <- read_file(file.path(system.file("emails", "contact_1mo", package = "awardsBot")))
     text <- sprintf(template,
                     db$piFirstName[i],
                     db$id[i],
@@ -135,6 +160,7 @@ send_one_month_remaining_correspondence <- function(awards_db) {
   return(awards_db)
 }
   
+
 #' General function that sends a correspondence based on a specified time
 #' 
 #' This function sends a correspondence based on a specified time interval from 
@@ -187,11 +213,11 @@ read_initial_template <- function(fundProgramName) {
   stopifnot(is.character(fundProgramName))
   
   if (grepl("AON", fundProgramName)) {
-    path <- file.path(system.file(package = "awardsBot"), "emails/contact_initial_aon")
+    path <- file.path(system.file("emails", "contact_initial_aon", package = "awardsBot"))
   } else if (grepl("SOCIAL", fundProgramName)) {
-    path <- file.path(system.file(package = "awardsBot"), "emails/contact_initial_social_sciences")
+    path <- file.path(system.file("emails", "contact_initial_social_sciences", package = "awardsBot"))
   } else {
-    path <- file.path(system.file(package = "awardsBot"), "emails/contact_initial")
+    path <- file.path(system.file("emails", "contact_initial", package = "awardsBot"))
   }
   
   if (!file.exists(path)) {

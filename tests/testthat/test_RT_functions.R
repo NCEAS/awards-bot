@@ -69,6 +69,19 @@ test_that("we can send a one month remaining correspondence",{
   expect_equal(db$contact_1mo, as.character(Sys.Date()))
 })
 
+test_that("we can send an aon correspondence", {
+  if (!check_rt_login(rt_url)) {
+    skip("Not logged in to RT. Skipping Test.")
+  }
+  
+  db <- create_dummy_database()
+  db <- create_ticket_and_send_initial_correspondence(db)
+  db$contact_aon_next <- as.character(Sys.Date())
+  db <- send_aon_correspondence(db)
+  
+  expect_equal(db$contact_aon_previous, db$contact_aon_next)
+})
+
 test_that("one error in the database does not the initial contact for loop", {
   # this is the test for "rt_ticket_create_error" error handling
 })
