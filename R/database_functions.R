@@ -7,13 +7,15 @@
 #' @export
 import_awards_db <- function(DATABASE_PATH) {
   tryCatch({
-    adc_nsf_awards <- utils::read.csv(DATABASE_PATH) %>% 
+    awards_db <- utils::read.csv(DATABASE_PATH) %>% 
       apply(2, as.character) %>% # force all fields into characters
       data.frame(stringsAsFactors = FALSE)
   },
   error = function(e) {
-    slackr_bot("I failed to read in the awards database file")
+    slackr::slackr_bot("I failed to read in the awards database file")
   })
+  
+  return(awards_db)
 }
 
 #' Update Awards Database
@@ -37,7 +39,21 @@ update_awards <- function(awards_db, from_date, to_date) {
   new_nsf_awards <- new_nsf_awards[!(new_nsf_awards$id %in% awards_db$id), ]
   
   ## combine awards
-  awards_db <- suppressWarnings(dplyr::bind_rows(awards_db, new_nsf_awards))
+  awards_db <- suppressWarnings(dplyr::bind_rows(awards_db, new_nsf_awards)) %>%
+    check_date_format()
+
+  return(awards_db)
+}
+
+
+update_contact_dates <- function(awards_db,
+                                 annual_report_time,
+                                 initial_aon_offset,
+                                 aon_recurring_interval) {
+  awards_db <- set_first_annual_report_due_date(awards_db, annual_report_time) %>%
+    update_annual_report_due_date() %>%
+    set_first_aon_data_due_date(initial_aon_offset) %>%
+    update_aon_data_due_date(aon_recurring_interval)
   
   return(awards_db)
 }
@@ -140,25 +156,24 @@ check_date_format <- function(awards_db) {
 }
 
 
-get_last_run <- function() {
-  last_run <- NULL
-  file_path <- file.path(getwd(), Sys.getenv("LASTRUN"))
+get_lastrun <- function(path) {
+  lastrun <- NULL
 
-  if (file.exists(file_path)) {
-    last_run <- as.Date(readLines(file_path, n = 1))
+  if (file.exists(path)) {
+    lastrun <- as.Date(readLines(path, n = 1))
   } 
-  if (is.null(last_run)) {
-    slackr::slackr_bot("I failed to read in my LASTRUN time. Setting LASTRUN to Sys.Date()")
-    last_run <- Sys.Date()
+  if (is.null(lastrun)) {
+    out <- sprintf("I failed to read in my LASTRUN time. Check that %s exists. Setting LASTRUN to Sys.Date()", path)
+    slackr::slackr_bot(out)
+    lastrun <- Sys.Date()
   }
   
-  return(last_run)
+  return(lastrun)
 }
 
 
-save_last_run <- function(last_run) {
-  file_path <- file.path(getwd(), Sys.getenv("LASTRUN"))
-  writeLines(last_run, file_path)
+save_lastrun <- function(lastrun, path) {
+  writeLines(lastrun, path)
 }
 
 # TODO make a check_database() function

@@ -20,7 +20,7 @@ test_that("update_awards does not overwrite existing rows", {
 })
 
 test_that("we can set intial annual report due dates", {
-  db <- read.csv(file.path(system.file(package = "awardsBot"), "example_db.csv"))
+  db <- import_awards_db(file.path(system.file("example_db.csv", package = "awardsBot")))
   db <- set_first_annual_report_due_date(db, annual_report_time = 8)
   
   expect_equal(db$contact_annual_report_next, c("2019-03-01", "2019-05-01"))
@@ -37,16 +37,16 @@ test_that("we can update annual report due dates", {
 })
 
 test_that("we can set initial aon data due dates", {
-  db <- import_awards_db(file.path(system.file(package = "awardsBot"), "example_db.csv"))
-  db <- set_first_aon_data_due_date(db, aon_time = 11)
+  db <- import_awards_db(file.path(system.file("example_db.csv", package = "awardsBot")))
+  db <- set_first_aon_data_due_date(db, initial_aon_offset = 11)
   
   expect_equal(db$contact_aon_next, c("2019-06-01", NA))
 })
 
 test_that("we can update aon data due dates", {
-  db <- import_awards_db(file.path(system.file(package = "awardsBot"), "example_db.csv"))
+  db <- import_awards_db(file.path(system.file("example_db.csv", package = "awardsBot")))
   
-  db <- set_first_aon_data_due_date(db, aon_time = 11)
+  db <- set_first_aon_data_due_date(db, initial_aon_offset = 11)
   db$contact_aon_previous <- db$contact_aon_next
   db <- update_aon_data_due_date(db, aon_recurring_interval = 6)
   
@@ -54,29 +54,23 @@ test_that("we can update aon data due dates", {
 })
 
 test_that("we can read in the last time the bot ran", {
-  # with_dir runs the tests in tempdir() and then resets to the previous wd
-  with_dir(tempdir(), {
-    Sys.setenv(LASTRUN = "LASTRUN")
-    file <- file.path(tempdir(), Sys.getenv("LASTRUN"))
+    file_path <- file.path(tempdir(), "LASTRUN")
+    writeLines(as.character(Sys.Date()), file_path)
+    lastrun <- get_lastrun(file_path)
     
-    writeLines(as.character(Sys.Date()), file)
-    last_run <- get_last_run()
-    
-    expect_equal(last_run, Sys.Date())
-  })
+    expect_equal(lastrun, Sys.Date())
 })
 
-test_that("get_last_run errors gracefully", {})
+test_that("get_lastrun errors gracefully", {})
 
 test_that("we can save the last time the bot ran", {
-  # with_dir runs the tests in tempdir() and then resets to the previous wd
-  with_dir(tempdir(), {
-  Sys.setenv(LASTRUN = "LASTRUN")
-  file <- file.path(tempdir(), Sys.getenv("LASTRUN"))
-  
-  writeLines("dummy text", file)
-  save_last_run("text to save")
+  file_path <- file.path(tempdir(), "LASTRUN")
+  writeLines("dummy text", file_path)
+  save_lastrun("text to save", file_path)
   
   expect_equal(readLines(file), "text to save")
-  })
 })
+
+test_that("update_contact_dates wrapper works", {})
+
+

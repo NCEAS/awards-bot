@@ -86,4 +86,6 @@ test_that("one error in the database does not the initial contact for loop", {
   # this is the test for "rt_ticket_create_error" error handling
 })
 
-test_that("check_rt_reply catches both potential errors")
+test_that("check_rt_reply catches both potential errors", {})
+
+test_that("send correspondences works", {})

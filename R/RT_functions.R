@@ -17,8 +17,8 @@ create_ticket <- function(award, requestor) {
                                  rt_base = "https://support.nceas.ucsb.edu/rt")
   
   if (!grepl("created", httr::content(ticket))) {
-    message <- sprintf("I failed to create a ticket for award: %s, from requestor: %s", award, requestor)
-    slackr::slackr_bot(message)
+    out <- sprintf("I failed to create a ticket for award: %s, from requestor: %s", award, requestor)
+    slackr::slackr_bot(out)
     return("rt_ticket_create_error")
   }
   
@@ -54,13 +54,13 @@ create_ticket_and_send_initial_correspondence <- function(awards_db) {
     }
     # Create correspondence text 
     template <- read_initial_template(db$fundProgramName[i])
-    text <- sprintf(template,
-                    db$piFirstName[i],
-                    db$id[i],
-                    db$title[i])
+    email_text <- sprintf(template,
+                          db$piFirstName[i],
+                          db$id[i],
+                          db$title[i])
     
     reply <- rt::rt_ticket_history_reply(ticket_id = db$rtTicket[i],
-                                         text = text,
+                                         text = email_text,
                                          rt_base = "https://support.nceas.ucsb.edu/rt")
     check_rt_reply(reply, db$rtTicket[i])
     
@@ -83,11 +83,11 @@ send_annual_report_correspondence <- function(awards_db) {
   for (i in seq_len(nrow(db))) {
     # Create correspondence text 
     template <- read_file(file.path(system.file("emails", "contact_annual_report", package = "awardsBot")))
-    text <- sprintf(template,
-                    db$piFirstName[i])
+    email_text <- sprintf(template,
+                          db$piFirstName[i])
     
     reply <- rt::rt_ticket_history_reply(ticket_id = db$rtTicket[i],
-                                         text = text,
+                                         text = email_text,
                                          rt_base = "https://support.nceas.ucsb.edu/rt")
     check_rt_reply(reply, db$rtTicket[i])
     
@@ -113,11 +113,11 @@ send_aon_correspondence <- function(awards_db){
   for (i in seq_len(nrow(db))) {
     # Create correspondence text 
     template <- read_file(file.path(system.file("emails", "contact_aon", package = "awardsBot")))
-    text <- sprintf(template,
-                    db$piFirstName[i])
+    email_text <- sprintf(template,
+                          db$piFirstName[i])
     
     reply <- rt::rt_ticket_history_reply(ticket_id = db$rtTicket[i],
-                                         text = text,
+                                         text = email_text,
                                          rt_base = "https://support.nceas.ucsb.edu/rt")
     check_rt_reply(reply, db$rtTicket[i])
     
@@ -140,13 +140,13 @@ send_one_month_remaining_correspondence <- function(awards_db) {
   for (i in seq_len(nrow(db))) {
     # Create correspondence text 
     template <- read_file(file.path(system.file("emails", "contact_1mo", package = "awardsBot")))
-    text <- sprintf(template,
-                    db$piFirstName[i],
-                    db$id[i],
-                    db$title[i])
+    email_text <- sprintf(template,
+                          db$piFirstName[i],
+                          db$id[i],
+                          db$title[i])
     
     reply <- rt::rt_ticket_history_reply(ticket_id = db$rtTicket[i],
-                                         text = text,
+                                         text = email_text,
                                          rt_base = "https://support.nceas.ucsb.edu/rt")
     check_rt_reply(reply, db$rtTicket[i])
     
@@ -167,14 +167,13 @@ send_one_month_remaining_correspondence <- function(awards_db) {
 #' the startDate or the expDate.  You can specify which direction in time you'd like
 #' to go based on the starting point, as well as the time interval in years, months,
 #' and days.  
-#' @param 
 send_correspondence_at_time_x <- function(awards_db,
                                           starting_point,
                                           direction,
                                           years = 0,
                                           months = 0, 
                                           days = 0,
-                                          rtTicket, text) {
+                                          rtTicket, email_text) {
   if (!(starting_point %in% c("startDate", "expDate"))) {
     stop("starting point must be one of 'startDate' or 'expDate'")
   }
@@ -184,22 +183,31 @@ send_correspondence_at_time_x <- function(awards_db,
   
   db <- awards_db
   dates <- as.Date(db[[starting_point]])
-  time_int <- period(c(days, months, years), c("day", "month", "year"))
+  time_int <- lubridate::period(c(days, months, years), c("day", "month", "year"))
   dates + time_int
   
 }
 
+## Wrapper function that sends all correspondences 
+send_correspondences <- function(awards_db) {
+  awards_db <- create_ticket_and_send_initial_correspondence(awards_db) %>%
+    send_annual_report_correspondence() %>%
+    send_aon_correspondence() %>%
+    send_one_month_remaining_correspondence() 
+  
+  return(awards_db)
+}
   
 ## helper function to check RT replies
 check_rt_reply <- function(reply, rt_ticket_number) {
   if (reply$status_code != 200) {
-    message <- sprintf("I failed to reply on: %s, with status code: %s", rt_ticket_number, reply$status_code)
-    slackr::slackr_bot(message)
+    out <- sprintf("I failed to reply on: %s, with status code: %s", rt_ticket_number, reply$status_code)
+    slackr::slackr_bot(out)
   }
   content <- httr::content(reply)
   if (!grepl("Correspondence added", content)) {
-    message <- paste0("I failed to send a correspondence on ticket: ", rt_ticket_number)
-    slackr::slackr_bot(message)
+    out <- paste0("I failed to send a correspondence on ticket: ", rt_ticket_number)
+    slackr::slackr_bot(out)
   }
 } 
 
