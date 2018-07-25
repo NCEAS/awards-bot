@@ -18,7 +18,8 @@ create_blank_database <- function() {
                  "contact_initial",
                  "contact_annual_report_previous",
                  "contact_annual_report_next",
-                 "contact_aon",
+                 "contact_aon_previous",
+                 "contact_aon_next",
                  "contact_3mo",
                  "contact_1mo",
                  "contact_1wk",
@@ -30,6 +31,7 @@ create_blank_database <- function() {
   return(blank_db)
 }
 
+
 write_blank_database <- function(path) {
   stopifnot(file.exists(dirname(path)))
   
@@ -38,6 +40,16 @@ write_blank_database <- function(path) {
   
   return(invisible())
 }
+
+
+write_inst_database <- function() {
+  db <- create_blank_database() %>%
+    update_awards(from_date = as.Date("2018-06-28"), to_date = as.Date("2018-07-05")) %>%
+    check_date_format() %>%
+    apply(2, as.character) 
+  write.csv(db[2:3,], file.path(system.file("example_db.csv", package = "awardsBot")), row.names = FALSE)
+}
+
 
 create_dummy_database <- function() {
   db <- create_blank_database()
@@ -48,6 +60,15 @@ create_dummy_database <- function() {
   db$title <- "**Test** AwardBot Title"
   db$fundProgramName <- "ARCTIC NATURAL SCIENCES"
   db$id <- "1234567"  # NSF award number 
+  db$startDate <- "2016-01-01"
   
   return(db)
+}
+
+
+with_dir <- function(directory, expr) {
+  old_wd <- getwd()
+  on.exit(setwd(old_wd))
+  setwd(directory)
+  evalq(expr)
 }

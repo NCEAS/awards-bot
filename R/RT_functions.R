@@ -18,7 +18,7 @@ create_ticket <- function(award, requestor) {
   
   if (!grepl("created", httr::content(ticket))) {
     message <- sprintf("I failed to create a ticket for award: %s, from requestor: %s", award, requestor)
-    slackr_bot(message)
+    slackr::slackr_bot(message)
     return("rt_ticket_create_error")
   }
   
@@ -28,6 +28,7 @@ create_ticket <- function(award, requestor) {
   
   return(ticket_id)
 }
+
 
 #' Create New Tickets and send initial correspondences 
 #' 
@@ -72,14 +73,16 @@ create_ticket_and_send_initial_correspondence <- function(awards_db) {
   return(awards_db)
 }
 
-send_annual_report_correspondence <- function(awards_db, current_date) {
+
+send_annual_report_correspondence <- function(awards_db) {
   # Get awards to send annual report correspondence 
-  indices <- which(awards_db$contact_annual_report_next == as.character(current_date)) # save indices to re-merge
+  current_date <- as.character(Sys.Date())
+  indices <- which(awards_db$contact_annual_report_next == current_date) # save indices to re-merge
   db <- awards_db[indices,]
   
   for (i in seq_len(nrow(db))) {
     # Create correspondence text 
-    template <- read_file(file.path(system.file(package = "awardsBot"), "emails/contact_annual_report"))
+    template <- read_file(file.path(system.file("emails", "contact_annual_report", package = "awardsBot")))
     text <- sprintf(template,
                     db$piFirstName[i])
     
@@ -102,23 +105,101 @@ send_annual_report_correspondence <- function(awards_db, current_date) {
 }
 
 
-send_aon_correspondence <- function(awards_db, aon_time)
-send_one_month_remaining <- function(awards_db, one_month_remaining_time) {
-  ## find which awards have not been contacted
-  contact_1mo <- which(is.na(adc_nsf_awards$contact_1mo))
-  contact_1mo <- which(as.numeric(Sys.Date() - as.Date(adc_nsf_awards$expDate[contact_1mo])) > -30)
+send_aon_correspondence <- function(awards_db){
+  current_date <- as.character(Sys.Date())
+  indices <- which(awards_db$contact_aon_next == current_date)
+  db <- awards_db[indices,]
+  
+  for (i in seq_len(nrow(db))) {
+    # Create correspondence text 
+    template <- read_file(file.path(system.file("emails", "contact_aon", package = "awardsBot")))
+    text <- sprintf(template,
+                    db$piFirstName[i])
+    
+    reply <- rt::rt_ticket_history_reply(ticket_id = db$rtTicket[i],
+                                         text = text,
+                                         rt_base = "https://support.nceas.ucsb.edu/rt")
+    check_rt_reply(reply, db$rtTicket[i])
+    
+    # Update last contact date
+    db$contact_aon_previous[i] <- db$contact_aon_next[i]
+  }
+  
+  # re-merge temporary database into permanent
+  awards_db[indices,] <- db
+  
+  return(awards_db)
 }
+
+  
+send_one_month_remaining_correspondence <- function(awards_db) {
+  dates <- as.character((as.Date(db$expDate) %m+% months(-1)))
+  indices <- which(dates == as.character(Sys.Date()))
+  db <- awards_db[indices,]
+  
+  for (i in seq_len(nrow(db))) {
+    # Create correspondence text 
+    template <- read_file(file.path(system.file("emails", "contact_1mo", package = "awardsBot")))
+    text <- sprintf(template,
+                    db$piFirstName[i],
+                    db$id[i],
+                    db$title[i])
+    
+    reply <- rt::rt_ticket_history_reply(ticket_id = db$rtTicket[i],
+                                         text = text,
+                                         rt_base = "https://support.nceas.ucsb.edu/rt")
+    check_rt_reply(reply, db$rtTicket[i])
+    
+    # Update last contact date
+    db$contact_1mo[i] <- as.character(Sys.Date())
+  }
+  
+  # re-merge temporary database into permanent
+  awards_db[indices,] <- db
+
+  return(awards_db)
+}
+  
+
+#' General function that sends a correspondence based on a specified time
+#' 
+#' This function sends a correspondence based on a specified time interval from 
+#' the startDate or the expDate.  You can specify which direction in time you'd like
+#' to go based on the starting point, as well as the time interval in years, months,
+#' and days.  
+#' @param 
+send_correspondence_at_time_x <- function(awards_db,
+                                          starting_point,
+                                          direction,
+                                          years = 0,
+                                          months = 0, 
+                                          days = 0,
+                                          rtTicket, text) {
+  if (!(starting_point %in% c("startDate", "expDate"))) {
+    stop("starting point must be one of 'startDate' or 'expDate'")
+  }
+  if (!is.numeric(c(years, months, days))) {
+    stop("'years', 'months', and 'days' arguments must be numeric")
+  } 
+  
+  db <- awards_db
+  dates <- as.Date(db[[starting_point]])
+  time_int <- period(c(days, months, years), c("day", "month", "year"))
+  dates + time_int
+  
+}
+
   
 ## helper function to check RT replies
 check_rt_reply <- function(reply, rt_ticket_number) {
   if (reply$status_code != 200) {
     message <- sprintf("I failed to reply on: %s, with status code: %s", rt_ticket_number, reply$status_code)
-    slackr_bot(message)
+    slackr::slackr_bot(message)
   }
   content <- httr::content(reply)
   if (!grepl("Correspondence added", content)) {
     message <- paste0("I failed to send a correspondence on ticket: ", rt_ticket_number)
-    slackr_bot(message)
+    slackr::slackr_bot(message)
   }
 } 
 
@@ -132,15 +213,15 @@ read_initial_template <- function(fundProgramName) {
   stopifnot(is.character(fundProgramName))
   
   if (grepl("AON", fundProgramName)) {
-    path <- file.path(system.file(package = "awardsBot"), "emails/contact_initial_aon")
+    path <- file.path(system.file("emails", "contact_initial_aon", package = "awardsBot"))
   } else if (grepl("SOCIAL", fundProgramName)) {
-    path <- file.path(system.file(package = "awardsBot"), "emails/contact_initial_social_sciences")
+    path <- file.path(system.file("emails", "contact_initial_social_sciences", package = "awardsBot"))
   } else {
-    path <- file.path(system.file(package = "awardsBot"), "emails/contact_initial")
+    path <- file.path(system.file("emails", "contact_initial", package = "awardsBot"))
   }
   
   if (!file.exists(path)) {
-    slackr::slackr_bot("I failed to read in a contact_initial email template, please check that the file paths returned by 'awardsBot::read_initial_template' all exist.")
+    slackr::slackr_bot("I failed to read in a contact_initial email template, please check that the file paths used by 'awardsBot::read_initial_template' all exist.")
   }
   
   template <- read_file(path)
@@ -161,3 +242,5 @@ check_rt_login <- function(rt_base) {
     return(TRUE)
   }
 }
+
+## TODO write send_correspondence function that takes extra arguments

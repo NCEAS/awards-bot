@@ -8,8 +8,8 @@
 import_awards_db <- function(DATABASE_PATH) {
   tryCatch({
     adc_nsf_awards <- utils::read.csv(DATABASE_PATH) %>% 
-      data.frame(stringsAsFactors = FALSE) %>%
-      apply(2, as.character) # force all fields into characters
+      apply(2, as.character) %>% # force all fields into characters
+      data.frame(stringsAsFactors = FALSE)
   },
   error = function(e) {
     slackr_bot("I failed to read in the awards database file")
@@ -43,7 +43,7 @@ update_awards <- function(awards_db, from_date, to_date) {
 }
 
 ## TODO - put this in update_awards?
-set_first_annual_report_due_date <- function(awards_db, annual_report_time, current_date) {
+set_first_annual_report_due_date <- function(awards_db, annual_report_time) {
   indices <- which(is.na(awards_db$contact_annual_report_next))
   db <- awards_db[indices,]
   
@@ -57,13 +57,14 @@ set_first_annual_report_due_date <- function(awards_db, annual_report_time, curr
   return(awards_db)
 }
 
+
 update_annual_report_due_date <- function(awards_db) {
   indices <- which(awards_db$contact_annual_report_previous == awards_db$contact_annual_report_next)
   db <- awards_db[indices,]
   
   # Set next annual report date ahead 1 year
   date <- lubridate::ymd(db$contact_annual_report_next)
-  db$contact_annual_report_next <- date %m+% months(12) %>%
+  db$contact_annual_report_next <- (date + lubridate::years(1)) %>%
     as.character()
   
   awards_db[indices,] <- db
@@ -71,13 +72,54 @@ update_annual_report_due_date <- function(awards_db) {
   return(awards_db)
 }
 
+
+set_first_aon_data_due_date <- function(awards_db, initial_aon_offset){
+  indices <- which((is.na(awards_db$contact_aon_next) & grepl("AON", db$fundProgramName)))
+  db <- awards_db[indices,]
+  
+  # Initialize first aon submissions as 'initial_aon_offset' months after 'startDate'
+  startDate <- lubridate::ymd(db$startDate)
+  db$contact_aon_next <- startDate %m+% months(initial_aon_offset) %>%
+    as.character()
+  
+  awards_db[indices,] <- db
+  
+  return(awards_db)
+}
+
+
+update_aon_data_due_date <- function(awards_db, aon_recurring_interval) {
+  indices <- which(awards_db$contact_aon_previous == awards_db$contact_aon_next)
+  db <- awards_db[indices,]
+  
+  # Set next aon data due date ahead 'aon_recurring_interval' months
+  date <- lubridate::ymd(db$contact_aon_next)
+  db$contact_aon_next <- (date %m+% months(aon_recurring_interval)) %>%
+    as.character()
+  
+  awards_db[indices,] <- db
+  
+  return(awards_db)
+}
+
+
 #' this is needed if someone opens the database in excel and saves it as a csv, the dates format changes in this case
 #' Also NSF dates are m-d-y whereas R dates are y-m-d
 #' potentially there is a more elegant solution than the one here
 #' Forcing date columns to y-m-d
 check_date_format <- function(awards_db) {
-  is_date <- which(colnames(awards_db) %in% c("date", "expDate", "startDate", "contact_initial",
-                                              "contact_3mo", "contact_1mo", "contact_1wk"))
+  is_date <- which(colnames(awards_db) %in% c("date",
+                                              "expDate",
+                                              "startDate",
+                                              "contact_initial",
+                                              "contact_annual_report_previous",
+                                              "contact_annual_report_next",
+                                              "contact_aon_previous",
+                                              "contact_aon_next",
+                                              "contact_3mo",
+                                              "contact_1mo",
+                                              "contact_1wk"))
+  
   awards_db[, is_date] <- apply(awards_db[, is_date], c(1,2), function(x){
     if (!is.na(x)) {  
       
@@ -97,5 +139,28 @@ check_date_format <- function(awards_db) {
   return(awards_db)
 }
 
-## TODO make a check_database() function
-## can't have any NA db$expDate values
+
+get_last_run <- function() {
+  last_run <- NULL
+  file_path <- file.path(getwd(), Sys.getenv("LASTRUN"))
+
+  if (file.exists(file_path)) {
+    last_run <- as.Date(readLines(file_path, n = 1))
+  } 
+  if (is.null(last_run)) {
+    slackr::slackr_bot("I failed to read in my LASTRUN time. Setting LASTRUN to Sys.Date()")
+    last_run <- Sys.Date()
+  }
+  
+  return(last_run)
+}
+
+
+save_last_run <- function(last_run) {
+  file_path <- file.path(getwd(), Sys.getenv("LASTRUN"))
+  writeLines(last_run, file_path)
+}
+
+# TODO make a check_database() function
+## can't have any NA db$expDate values, or startDate
+# - probably can't have any NA date values for functions to work 

@@ -1,5 +1,16 @@
 ## Main 
 
+# Set up environment variables 
+#readRenviron(file.path(getwd(), ".env"))
+
+# Source the bot 
+# remotes::install_github("NCEAS/awards-bot")
+# library(awardsBot)
+
+# Log in to RT 
+
+main <- function() {
+# Read in LASTRUN
 # import database 
 
 # update database 
@@ -14,7 +25,7 @@
 
 # save db 
 # save Sys.Date as from_date
-
+}
 
 ## Run a separate cron bot that notifies with correspondences 
 ## include some logic to only run this when Sys.Date() changes, the rest can run every 15 minutes.  
