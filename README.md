@@ -26,3 +26,16 @@ Every 24 hours the bot queries NSF's [award API](https://www.research.gov/common
 Run the script every 24 hours.  Example crontab: 
 
 ## Adding a correspondence
+
+## Style
+Code generally follows the [tidyverse style conventions](http://style.tidyverse.org/), with the following specific style preferences: 
+- underscore for all variable names unless referring to an NSF awards API return field (i.e. expDate, startDate, etc.)
+
+## Acknowledgements
+Work on this package was supported by:
+
+- The Arctic Data Center: NSF-PLR grant #1546024 to M. B. Jones, S. Baker-Yeboah, J. Dozier, M. Schildhauer, and A. Budden
+
+Additional support was provided by the National Center for Ecological Analysis and Synthesis, a Center funded by the University of California, Santa Barbara, and the State of California.
+
+[![nceas_footer](https://www.nceas.ucsb.edu/files/newLogo_0.png)](http://www.nceas.ucsb.edu)
