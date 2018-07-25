@@ -3,5 +3,4 @@
 export(create_ticket)
 export(create_ticket_and_send_initial_correspondence)
 export(import_awards_db)
-export(login_rt)
 export(update_awards)

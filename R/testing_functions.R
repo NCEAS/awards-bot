@@ -36,7 +36,7 @@ write_blank_database <- function(path) {
   stopifnot(file.exists(dirname(path)))
   
   db <- create_blank_database()
-  write.csv(db, path, row.names = FALSE)
+  utils::write.csv(db, path, row.names = FALSE)
   
   return(invisible())
 }
@@ -47,7 +47,8 @@ write_inst_database <- function() {
     update_awards(from_date = as.Date("2018-06-28"), to_date = as.Date("2018-07-05")) %>%
     check_date_format() %>%
     apply(2, as.character) 
-  write.csv(db[2:3,], file.path(system.file("example_db.csv", package = "awardsBot")), row.names = FALSE)
+  utils::write.csv(db[2:3,], file.path(system.file("example_db.csv", package = "awardsBot")),
+                   row.names = FALSE)
 }
 
 
