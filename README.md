@@ -28,6 +28,9 @@ Run the script every 24 hours.  Example crontab:
 ## Adding a correspondence
 Adding correspondence example coming soon.
 
+## How the database works 
+Adding text soon
+
 ## Style
 Code generally follows the [tidyverse style conventions](http://style.tidyverse.org/), with the following specific style preferences: 
 - underscore for all variable names unless referring to an NSF awards API return field (i.e. expDate, startDate, etc.)
