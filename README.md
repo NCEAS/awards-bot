@@ -17,9 +17,9 @@ Every 24 hours the bot queries NSF's [award API](https://www.research.gov/common
   RT_URL="https://example.com/rt"          # The URL of your RT install
   RT_USER="your_rt_user"                   # Your RT username
   RT_PASS="your_rt_password"               # Your RT password
-  INITIAL_ANNUAL_REPORT_OFFSET=8           # Number of months after award start date to send annaul report reminder
-  INITIAL_AON_OFFSET=11                    # Number of months after award start date to send AON data due reminder
-  AON_RECURRING_INTERVAL=6                 # Number of months to data due reminders for AON awards
+  INITIAL_ANNUAL_REPORT_OFFSET=8           # Number of months after award startDate to send annaul report reminder
+  INITIAL_AON_OFFSET=11                    # Number of months after award startDate to send first AON data due reminder
+  AON_RECURRING_INTERVAL=6                 # Number of months to send recurring emails for AON data due
   ```
 
 ## Running 
