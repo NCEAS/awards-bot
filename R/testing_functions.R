@@ -20,10 +20,8 @@ create_blank_database <- function() {
                  "contact_annual_report_next",
                  "contact_aon_previous",
                  "contact_aon_next",
-                 "contact_3mo",
                  "contact_1mo",
-                 "contact_1wk",
-                 "adcPids")
+                 "expired_award_flag")
    
   blank_db <- data.frame(matrix(ncol = length(col_names), nrow = 1))
   colnames(blank_db) <- col_names
@@ -41,7 +39,7 @@ write_blank_database <- function(path) {
   return(invisible())
 }
 
-
+## TODO - this doesn't appear to work properly 
 write_inst_database <- function() {
   db <- create_blank_database() %>%
     update_awards(from_date = as.Date("2018-06-28"), to_date = as.Date("2018-07-05")) %>%
