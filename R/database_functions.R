@@ -31,8 +31,8 @@ update_awards <- function(awards_db, from_date, to_date) {
   
   ## format dates
   format <- "%m/%d/%Y"
-  to_date <- format(to_date, format)
-  from_date <- format(from_date, format)
+  to_date <- format(as.Date(to_date), format)
+  from_date <- format(as.Date(from_date), format)
   
   ## get new awards from NSF API
   new_nsf_awards <- datamgmt::get_awards(from_date = from_date, to_date = to_date)
@@ -45,7 +45,8 @@ update_awards <- function(awards_db, from_date, to_date) {
   return(awards_db)
 }
 
-
+#' Wrapper function for set_first_annual_report_due_date, update_annual_report_due_date
+#' set_first_aon_data_due_date, update_aon_data_due_date
 update_contact_dates <- function(awards_db,
                                  annual_report_time,
                                  initial_aon_offset,
@@ -58,7 +59,6 @@ update_contact_dates <- function(awards_db,
   return(awards_db)
 }
 
-## TODO - put this in update_awards?
 set_first_annual_report_due_date <- function(awards_db, annual_report_time) {
   indices <- which(is.na(awards_db$contact_annual_report_next))
   db <- awards_db[indices,]
@@ -133,9 +133,7 @@ check_date_format <- function(awards_db) {
                                               "contact_annual_report_next",
                                               "contact_aon_previous",
                                               "contact_aon_next",
-                                              "contact_3mo",
-                                              "contact_1mo",
-                                              "contact_1wk"))
+                                              "contact_3mo"))
   
   awards_db[, is_date] <- apply(awards_db[, is_date], c(1,2), function(x){
     if (!is.na(x)) {  
