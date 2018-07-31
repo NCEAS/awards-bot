@@ -11,12 +11,12 @@ test_that("update_awards updates an existing database with NSF API information",
 test_that("update_awards does not overwrite existing rows", {
   db <- create_blank_database()
   db <- update_awards(db, from_date = as.Date("2018-06-28"), to_date = as.Date("2018-07-05"))
-  db$contact_3mo[2] <- "2018-07-05"
+  db$rtTicket[1] <- "test_ticket_number"
   
   # update awards with the same information 
   db <- update_awards(db, from_date = as.Date("2018-06-28"), to_date = as.Date("2018-07-05"))
   
-  expect_equal(db$contact_3mo[2], "2018-07-05")
+  expect_equal(db$rtTicket[1], "test_ticket_number")
 })
 
 test_that("we can set intial annual report due dates", {
@@ -53,6 +53,13 @@ test_that("we can update aon data due dates", {
   expect_equal(db$contact_aon_next, c("2019-12-01", NA))
 })
 
+test_that("we can set one month remaining date", {
+  db <- import_awards_db(file.path(system.file("example_db.csv", package = "awardsBot")))
+  
+  db <- set_one_month_remaining_date(db)
+  expect_equal(db$contact_1mo, as.character(as.Date(db$expDate) %m+% months(-1)))
+})
+
 test_that("we can read in the last time the bot ran", {
     file_path <- file.path(tempdir(), "LASTRUN")
     writeLines(as.character(Sys.Date()), file_path)
@@ -72,5 +79,7 @@ test_that("we can save the last time the bot ran", {
 })
 
 test_that("update_contact_dates wrapper works", {})
+
+
 
 

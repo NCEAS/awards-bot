@@ -1,6 +1,8 @@
 # awards_bot
 
 The NSF award bot regularly contacts principal investigators with reminders on their project specific deadlines.
+[![Build Status](https://travis-ci.org/NCEAS/awards-bot.svg?branch=master)](https://travis-ci.org/NCEAS/awards-bot)
+
 
 ## How the bot works 
 Every 24 hours the bot queries NSF's award [API](https://www.research.gov/common/webapi/awardapisearch-v1.htm) for newly awarded grants and stores this information in a pre-existing database.  When it finds a new award it creates a new ticket in [Request Tracker](https://bestpractical.com/request-tracker/) and sends an initial correspondence that outlines project-specific expectations and deadlines.  It sends reminders to submit annual reports, submit data for Arctic Observing Network (AON) projects, and that the award is expiring soon.  The bot sends error messages to a slack channel. 
@@ -41,7 +43,7 @@ In this example we will assume the submission policies changed to require an ini
 
 ## Testing the bot
 The awards-bot package contains modular unit tests, however, many of these don't run, by default, unless the R session is connected to [RT](https://bestpractical.com/request-tracker/) and [Slack](https://slack.com/).  If you need to test the bot for any reason run the [test_main unit test](https://github.com/NCEAS/awards-bot/blob/master/tests/testthat/test_main.R) locally, ideally line by line. Be aware that this will create two test tickets in RT.  A thorough test of the bot would involve signing in to RT and Slack, and running `devtools::check()`; although, if the [test_main unit test](https://github.com/NCEAS/awards-bot/blob/master/tests/testthat/test_main.R) passes it's generally safe to assume the more modular tests will pass as well.   
-- only use `awardsBot:::test_main()` in testing.  This is a line for line copy of `awardsBot::main()` except with an additional `email` argument 
+- only use `awardsBot:::test_main()` in testing.  This a wrapper for `awardsBot::main()` except with an additional `email` argument
 - set `email = your test email address` in the unit test script  
 - modify `test_main()` calls in the unit test script accordingly, including any additional arguments 
 

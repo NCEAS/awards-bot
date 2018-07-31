@@ -10,9 +10,9 @@ text <- paste(adc_info$funding_text, collapse = " ")
 indices <- which(sapply(active_db$id, function(x) grepl(x, text)))
 
 length(indices) # 42/405 active awards are already in the ADC - don't need to contact these?
-active_db <- active_db[-indices,]
+active_db2 <- active_db[-indices,]
 
-indices_contact3mo <- which(as.Date(active_db$contact_3mo) < Sys.Date())
+indices_contact1mo <- which(as.Date(active_db$contact_1mo) < Sys.Date())
 length(indices_contact3mo) #49 awards have less than 3 months to go - contact these with report end reminder
 active_db <- active_db[-indices_contact3mo,]
 

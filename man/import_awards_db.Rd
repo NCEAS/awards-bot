@@ -2,13 +2,13 @@
 % Please edit documentation in R/database_functions.R
 \name{import_awards_db}
 \alias{import_awards_db}
-\title{Read in awards}
+\title{Import awards database}
 \usage{
-import_awards_db(DATABASE_PATH)
+import_awards_db(path)
 }
 \arguments{
-\item{DATABASE_PATH}{(character) globally defined}
+\item{path}{(character) path to the awards database}
 }
 \description{
-Run this to get the awards database file
+Import awards database as an all-character data.frame.
 }

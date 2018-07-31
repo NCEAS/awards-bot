@@ -1,22 +1,28 @@
 Package: awardsBot
 Type: Package
-Title: What the package does (short line)
+Title: Periodic correspondence bot for NSF award recipients
 Version: 1.0
 Date: 2018-06-18
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: Creates an NSF awards database for the Arctic Data Center. Sends correspondence to awardees.
+Authors@R: c(
+  person("Dominic", "Mullen", email = "dmullen17@gmail.com", role = c("cre", "aut")),
+  person("Mitchell", "Maier", email = "mitchell.maier@gmail.com", role = c("ctb")),
+  person("Irene", "Steves", comment = "https://github.com/isteves", role = c("ctb"))
+  )
+Maintainer: Dominic Mullen <dmullen17@gmail.com>
+Description: Creates an NSF awards database for the Arctic Data Center. Sends periodic correspondence to awardees.
 License: Apache License (== 2.0)
 Imports:
-  datamgmt,
   dplyr,
   httr,
   lubridate,
   magrittr,
+  RCurl,
   rt,
   slackr,
-  stringr
+  stringr,
+  XML
+Suggests: 
+  testthat
 Remotes: 
-  NCEAS/datamgmt,
   NCEAS/rt
 RoxygenNote: 6.0.1

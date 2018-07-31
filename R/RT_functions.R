@@ -1,3 +1,21 @@
+#' Wrapper function that sends all correspondences
+#' 
+#' Wrapper function for 'create_ticket_and_send_initial_correspondence',
+#' 'send_annual_report_correspondence', 'send_aon_correspondence', and
+#' 'send_one_month_remaining_correspondence'
+#' 
+#' @param awards_db (data.frame) awards database
+#' 
+#' @importFrom magrittr "%>%" 
+send_correspondences <- function(awards_db) {
+  awards_db <- create_ticket_and_send_initial_correspondence(awards_db) %>%
+    send_annual_report_correspondence() %>%
+    send_aon_correspondence() %>%
+    send_one_month_remaining_correspondence() 
+  
+  return(awards_db)
+}
+
 #' Create New Tickets
 #' 
 #' Run this code to create a new RT ticket based off NSF award number and requestor
@@ -7,8 +25,6 @@
 #' @param requestor (character) PI email
 #' 
 #' @return ticket_id (character) Newly generated RT ticket id
-#'
-#' @export
 create_ticket <- function(award, requestor) {
   subject <- sprintf("Arctic Data Center NSF Award: %s",  award)
   ticket <- rt::rt_ticket_create(queue = "arcticAwards",
@@ -36,11 +52,9 @@ create_ticket <- function(award, requestor) {
 #' off a database of new NSF awards.  The database must include: fundProgramName,
 #' piEmail, piFirstName, id (NSF award #), title (NSF award title).  
 #'
-#' @param awards (data.frame) database of NSF awards pulled from NSF-API using datamgmt::get_awards
+#' @param awards_db (data.frame) database of NSF awards pulled from NSF-API
 #'
 #' @return awards_db (data.frame) The initial database with updated RT ticket numbers
-#'
-#' @export
 create_ticket_and_send_initial_correspondence <- function(awards_db) {
   # Get awards without an initial correspondence
   indices <- which(is.na(awards_db$contact_initial)) # save indices to re-merge
@@ -133,7 +147,6 @@ send_aon_correspondence <- function(awards_db){
 
   
 send_one_month_remaining_correspondence <- function(awards_db) {
-  dates <- as.character((as.Date(db$expDate) %m+% months(-1)))
   indices <- which(dates == as.character(Sys.Date()))
   db <- awards_db[indices,]
   
@@ -161,19 +174,20 @@ send_one_month_remaining_correspondence <- function(awards_db) {
 }
   
 
-#' General function that sends a correspondence based on a specified time
-#' 
-#' This function sends a correspondence based on a specified time interval from 
-#' the startDate or the expDate.  You can specify which direction in time you'd like
-#' to go based on the starting point, as well as the time interval in years, months,
-#' and days.  
+# General function that sends a correspondence based on a specified time
+# 
+#This function sends a correspondence based on a specified time interval from 
+# the startDate or the expDate.  You can specify which direction in time you'd like
+# to go based on the starting point, as well as the time interval in years, months,
+# and days.  
 send_correspondence_at_time_x <- function(awards_db,
                                           starting_point,
                                           direction,
                                           years = 0,
                                           months = 0, 
                                           days = 0,
-                                          rtTicket, email_text) {
+                                          rtTicket, 
+                                          email_text) {
   if (!(starting_point %in% c("startDate", "expDate"))) {
     stop("starting point must be one of 'startDate' or 'expDate'")
   }
@@ -188,16 +202,6 @@ send_correspondence_at_time_x <- function(awards_db,
   
 }
 
-#' Wrapper function that sends all correspondences
-#' @importFrom magrittr "%>%" 
-send_correspondences <- function(awards_db) {
-  awards_db <- create_ticket_and_send_initial_correspondence(awards_db) %>%
-    send_annual_report_correspondence() %>%
-    send_aon_correspondence() %>%
-    send_one_month_remaining_correspondence() 
-  
-  return(awards_db)
-}
   
 ## helper function to check RT replies
 check_rt_reply <- function(reply, rt_ticket_number) {
@@ -251,5 +255,3 @@ check_rt_login <- function(rt_base) {
     return(TRUE)
   }
 }
-
-## TODO write send_correspondence function that takes extra arguments

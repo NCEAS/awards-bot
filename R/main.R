@@ -23,7 +23,7 @@ main <- function(database_path = Sys.getenv("DATABASE_PATH"),
   return(invisible())
 }
 
-## Same as main, although for testing swap out all email address for 'mullen@nceas.ucsb.edu'
+# Wrapper for main, with additional email testing argument. 
 test_main <- function(database_path = Sys.getenv("DATABASE_PATH"),
                       lastrun_path = Sys.getenv("LASTRUN_PATH"),
                       current_date = as.character(Sys.Date()),
@@ -31,23 +31,15 @@ test_main <- function(database_path = Sys.getenv("DATABASE_PATH"),
                       initial_aon_offset = Sys.getenv("INITIAL_AON_OFFSET"),
                       aon_recurring_interval = Sys.getenv("AON_RECURRING_INTERVAL"),
                       email) {
-  ## Import awards database 
+  # Change email to testing email 
   db <- import_awards_db(database_path)
-  
-  ## Update awards database 
-  lastrun <- get_lastrun(lastrun_path)
-  db <- update_awards(db, lastrun, current_date)
-  db <- update_contact_dates(db, annual_report_time, initial_aon_offset, aon_recurring_interval) 
   db$piEmail <- email
+  write.csv(db, database_path, row.names = FALSE)
   
-  ## Send correspondences 
-  db <- send_correspondences(db)
+  main(database_path = database_path, lastrun_path = lastrun_path, current_date = current_date,
+       annual_report_time = annual_report_time, initial_aon_offset = initial_aon_offset,
+       aon_recurring_interval = aon_recurring_interval)
   
-  ## Save lastrun and database 
-  save_lastrun(current_date, lastrun_path)
-  utils::write.csv(db, file = database_path, row.names = FALSE)
-  
-  return(invisible())
 }
 
 ## Run a separate cron bot that notifies with correspondences 

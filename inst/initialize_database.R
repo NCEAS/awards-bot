@@ -1,10 +1,9 @@
 ## Initialize the database 
 ## Storing this script in inst for historical interest
-library(datamgmt)
 library(data.table)
 library(dplyr)
 
-db <- get_awards(to_date = "07/29/2018")  # pulls all awards up to the current date
+db <- get_awards(to_date = "07/31/2018")  # pulls all awards up to the current date
 write.csv(db, file = file.path(tempdir(), "temp_db.csv"), row.names = FALSE)
 
 db <- dplyr::bind_rows(db, awardsBot:::create_blank_database()) %>%
@@ -40,6 +39,6 @@ while(any(as.Date(active_db$contact_aon_next) < Sys.Date(), na.rm = TRUE)) {
 }
 
 # Set 3 month contact before award expires
-active_db$contact_3mo <- as.character((as.Date(active_db$expDate) %m+% months(-3)))
+active_db$contact_1mo <- as.character((as.Date(active_db$expDate) %m+% months(-1)))
 
 
