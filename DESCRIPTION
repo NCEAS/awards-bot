@@ -21,6 +21,8 @@ Imports:
   slackr,
   stringr,
   XML
+Suggests: 
+  testthat
 Remotes: 
   NCEAS/rt
 RoxygenNote: 6.0.1
