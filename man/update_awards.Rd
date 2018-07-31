@@ -15,6 +15,5 @@ update_awards(awards_db, from_date, to_date)
 }
 \description{
 Update the awards database with new awards information from the NSF API 
-(https://www.research.gov/common/webapi/awardapisearch-v1.htm) using 
-`datamgmt::get_awards`.
+(https://www.research.gov/common/webapi/awardapisearch-v1.htm) using
 }

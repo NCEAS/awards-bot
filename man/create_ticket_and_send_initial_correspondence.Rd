@@ -7,7 +7,7 @@
 create_ticket_and_send_initial_correspondence(awards_db)
 }
 \arguments{
-\item{awards_db}{(data.frame) database of NSF awards pulled from NSF-API using datamgmt::get_awards}
+\item{awards_db}{(data.frame) database of NSF awards pulled from NSF-API}
 }
 \value{
 awards_db (data.frame) The initial database with updated RT ticket numbers

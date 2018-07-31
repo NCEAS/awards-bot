@@ -52,7 +52,7 @@ create_ticket <- function(award, requestor) {
 #' off a database of new NSF awards.  The database must include: fundProgramName,
 #' piEmail, piFirstName, id (NSF award #), title (NSF award title).  
 #'
-#' @param awards_db (data.frame) database of NSF awards pulled from NSF-API using datamgmt::get_awards
+#' @param awards_db (data.frame) database of NSF awards pulled from NSF-API
 #'
 #' @return awards_db (data.frame) The initial database with updated RT ticket numbers
 create_ticket_and_send_initial_correspondence <- function(awards_db) {
@@ -147,7 +147,6 @@ send_aon_correspondence <- function(awards_db){
 
   
 send_one_month_remaining_correspondence <- function(awards_db) {
-  dates <- as.character((as.Date(db$expDate) %m+% months(-1)))
   indices <- which(dates == as.character(Sys.Date()))
   db <- awards_db[indices,]
   
@@ -175,12 +174,12 @@ send_one_month_remaining_correspondence <- function(awards_db) {
 }
   
 
-#' General function that sends a correspondence based on a specified time
-#' 
-#' This function sends a correspondence based on a specified time interval from 
-#' the startDate or the expDate.  You can specify which direction in time you'd like
-#' to go based on the starting point, as well as the time interval in years, months,
-#' and days.  
+# General function that sends a correspondence based on a specified time
+# 
+#This function sends a correspondence based on a specified time interval from 
+# the startDate or the expDate.  You can specify which direction in time you'd like
+# to go based on the starting point, as well as the time interval in years, months,
+# and days.  
 send_correspondence_at_time_x <- function(awards_db,
                                           starting_point,
                                           direction,

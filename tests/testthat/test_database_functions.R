@@ -53,6 +53,13 @@ test_that("we can update aon data due dates", {
   expect_equal(db$contact_aon_next, c("2019-12-01", NA))
 })
 
+test_that("we can set one month remaining date", {
+  db <- import_awards_db(file.path(system.file("example_db.csv", package = "awardsBot")))
+  
+  db <- set_one_month_remaining_date(db)
+  expect_equal(db$contact_1mo, as.character(as.Date(db$expDate) %m+% months(-1)))
+})
+
 test_that("we can read in the last time the bot ran", {
     file_path <- file.path(tempdir(), "LASTRUN")
     writeLines(as.character(Sys.Date()), file_path)
@@ -72,5 +79,7 @@ test_that("we can save the last time the bot ran", {
 })
 
 test_that("update_contact_dates wrapper works", {})
+
+
 
 
