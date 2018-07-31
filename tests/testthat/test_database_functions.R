@@ -11,12 +11,12 @@ test_that("update_awards updates an existing database with NSF API information",
 test_that("update_awards does not overwrite existing rows", {
   db <- create_blank_database()
   db <- update_awards(db, from_date = as.Date("2018-06-28"), to_date = as.Date("2018-07-05"))
-  db$contact_3mo[2] <- "2018-07-05"
+  db$rtTicket[1] <- "test_ticket_number"
   
   # update awards with the same information 
   db <- update_awards(db, from_date = as.Date("2018-06-28"), to_date = as.Date("2018-07-05"))
   
-  expect_equal(db$contact_3mo[2], "2018-07-05")
+  expect_equal(db$rtTicket[1], "test_ticket_number")
 })
 
 test_that("we can set intial annual report due dates", {

@@ -1,13 +1,13 @@
-#' Read in awards 
+#' Import awards database 
 #' 
-#' Run this to get the awards database file 
+#' Import awards database as an all-character data.frame. 
 #' 
-#' @param DATABASE_PATH (character) globally defined 
+#' @param path (character) path to the awards database 
 #' 
 #' @export
-import_awards_db <- function(DATABASE_PATH) {
+import_awards_db <- function(path) {
   tryCatch({
-    awards_db <- utils::read.csv(DATABASE_PATH) %>% 
+    awards_db <- utils::read.csv(path) %>% 
       apply(2, as.character) %>% # force all fields into characters
       data.frame(stringsAsFactors = FALSE)
   },
@@ -20,9 +20,11 @@ import_awards_db <- function(DATABASE_PATH) {
 
 #' Update Awards Database
 #' 
-#' Run this code to get the awards database with updated awards
+#' Update the awards database with new awards information from the NSF API 
+#' (https://www.research.gov/common/webapi/awardapisearch-v1.htm) using 
+#' `datamgmt::get_awards`.  
 #'
-#' @param awards_db (data.frame) awards database to file containing database
+#' @param awards_db (data.frame) awards database
 #' @param from_date (date) date to begin search from 
 #' @param to_date (date) date to end search at 
 #'
@@ -45,8 +47,18 @@ update_awards <- function(awards_db, from_date, to_date) {
   return(awards_db)
 }
 
+#' Update contact dates in awards database
+#' 
 #' Wrapper function for set_first_annual_report_due_date, update_annual_report_due_date
 #' set_first_aon_data_due_date, update_aon_data_due_date
+#' 
+#' @param awards_db (data.frame) awards database
+#' @param annual_report_time (numeric) time in months after 'startDate' to send the first annual report reminder
+#' @param initial_aon_offset (numeric) time in months after 'startDate' to send the first aon data reminder
+#' @param aon_recurring_interval (numeric) time in months to send aon data recurring reminders
+#' 
+#' @importFrom magrittr "%>%"
+#' @importFrom lubridate "%m+%"
 update_contact_dates <- function(awards_db,
                                  annual_report_time,
                                  initial_aon_offset,
@@ -58,6 +70,7 @@ update_contact_dates <- function(awards_db,
   
   return(awards_db)
 }
+
 
 set_first_annual_report_due_date <- function(awards_db, annual_report_time) {
   indices <- which(is.na(awards_db$contact_annual_report_next))
@@ -103,8 +116,6 @@ set_first_aon_data_due_date <- function(awards_db, initial_aon_offset){
   return(awards_db)
 }
 
-#' Update AON data due dates
-#' @importFrom lubridate "%m+%"
 update_aon_data_due_date <- function(awards_db, aon_recurring_interval) {
   indices <- which(awards_db$contact_aon_previous == awards_db$contact_aon_next)
   db <- awards_db[indices,]
@@ -120,10 +131,10 @@ update_aon_data_due_date <- function(awards_db, aon_recurring_interval) {
 }
 
 
-#' this is needed if someone opens the database in excel and saves it as a csv, the dates format changes in this case
-#' Also NSF dates are m-d-y whereas R dates are y-m-d
-#' potentially there is a more elegant solution than the one here
-#' Forcing date columns to y-m-d
+# this is needed if someone opens the database in excel and saves it as a csv, the dates format changes in this case
+# Also NSF dates are m-d-y whereas R dates are y-m-d
+# potentially there is a more elegant solution than the one here
+# Forcing date columns to y-m-d
 check_date_format <- function(awards_db) {
   is_date <- which(colnames(awards_db) %in% c("date",
                                               "expDate",

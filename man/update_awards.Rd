@@ -7,12 +7,14 @@
 update_awards(awards_db, from_date, to_date)
 }
 \arguments{
-\item{awards_db}{(data.frame) awards database to file containing database}
+\item{awards_db}{(data.frame) awards database}
 
 \item{from_date}{(date) date to begin search from}
 
 \item{to_date}{(date) date to end search at}
 }
 \description{
-Run this code to get the awards database with updated awards
+Update the awards database with new awards information from the NSF API 
+(https://www.research.gov/common/webapi/awardapisearch-v1.htm) using 
+`datamgmt::get_awards`.
 }

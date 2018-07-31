@@ -1,5 +1,3 @@
-## Main 
-
 ## Set up environment variables 
 readRenviron(file.path(getwd(), ".Renviron"))
 

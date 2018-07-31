@@ -1,4 +1,6 @@
-  test_that("main", {
+rt_url <- "https://support.nceas.ucsb.edu/rt"
+
+test_that("main sends correspondences and updates the database", {
   if (!check_rt_login(rt_url)) {
     skip("Not logged in to RT. Skipping Test.")
   }
@@ -14,12 +16,12 @@
   annual_report_time <- 8 
   initial_aon_offset <- 11 
   aon_recurring_interval <- 6 
-  email = "mullen@nceas.ucsb.edu"  # set to the test email you're using.  
+  email <- "mullen@nceas.ucsb.edu"  # set to the test email you're using.  
   
   ## Initialize database and lastrun
   db <- import_awards_db(file.path(system.file("example_db.csv", package = "awardsBot")))
   database_path <- file.path(tempdir(), "temp_db.csv")
-  write.csv(db, database_path, row.names = FALSE)
+  utils::write.csv(db, database_path, row.names = FALSE)
   lastrun_path <- file.path(tempdir(), "LASTRUN")
   writeLines(as.character(Sys.Date()), lastrun_path)
   
@@ -43,7 +45,7 @@
   
   ## Test that main() sends annual report reminders 
   db$contact_annual_report_next <- as.character(Sys.Date())
-  write.csv(db, database_path, row.names = FALSE)
+  utils::write.csv(db, database_path, row.names = FALSE)
   test_main(database_path = database_path, 
             lastrun_path = lastrun_path, 
             current_date = as.character(Sys.Date()),
@@ -57,7 +59,7 @@
   
   ## Test that main sends AON reminders and moves next annual report reminder date ahead 1 year 
   db$contact_aon_next[1] <- as.character(Sys.Date())
-  write.csv(db, database_path, row.names = FALSE)
+  utils::write.csv(db, database_path, row.names = FALSE)
   test_main(database_path = database_path, 
             lastrun_path = lastrun_path, 
             current_date = as.character(Sys.Date()),
@@ -72,7 +74,7 @@
   
   ## Test that main sends one month remaining reminders and moves next annual aon data reminder date ahead by 'aon_recurring_interval' months
   db$expDate <- as.character(Sys.Date() %m+% months(1))
-  write.csv(db, database_path, row.names = FALSE)
+  utils::write.csv(db, database_path, row.names = FALSE)
   test_main(database_path = database_path, 
             lastrun_path = lastrun_path, 
             current_date = as.character(Sys.Date()),
