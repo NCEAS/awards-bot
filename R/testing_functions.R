@@ -21,7 +21,7 @@ create_blank_database <- function() {
                  "contact_aon_previous",
                  "contact_aon_next",
                  "contact_1mo",
-                 "expired_award_flag")
+                 "active_award_flag")
    
   blank_db <- data.frame(matrix(ncol = length(col_names), nrow = 1))
   colnames(blank_db) <- col_names

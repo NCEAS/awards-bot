@@ -62,11 +62,16 @@ update_contact_dates <- function(awards_db,
                                  annual_report_time,
                                  initial_aon_offset,
                                  aon_recurring_interval) {
-  awards_db <- set_first_annual_report_due_date(awards_db, annual_report_time) %>%
+  indices <- which(awards_db$active_award_flag == "yes") 
+  db <- awards_db[indices,]
+  
+  db <- set_first_annual_report_due_date(db, annual_report_time) %>%
     update_annual_report_due_date() %>%
     set_first_aon_data_due_date(initial_aon_offset) %>%
     update_aon_data_due_date(aon_recurring_interval) %>%
     set_one_month_remaining_date()
+  
+  awards_db[indices,] <- db
   
   return(awards_db)
 }
@@ -200,10 +205,11 @@ save_lastrun <- function(lastrun, path) {
 }
 
 
-#' Get NSF Arctic/Polar program award information
+#' Get NSF Arctic/Polar program award information.  
 #'
 #' Uses the \href{https://www.research.gov/common/webapi/awardapisearch-v1.htm}{NSF API}
-#' to get all records pertaining to the Arctic or Polar programs.
+#' to get all records pertaining to the Arctic or Polar programs. Originally in the
+#' 'NCEAS/datamgmt' package.  Added to this repo because the import of datamgmt is too costly.  
 #'
 #' @param from_date (character) Optional. Returns all
 #' records with start date after specified date.

@@ -8,10 +8,15 @@
 #' 
 #' @importFrom magrittr "%>%" 
 send_correspondences <- function(awards_db) {
-  awards_db <- create_ticket_and_send_initial_correspondence(awards_db) %>%
+  indices <- which(awards_db$active_award_flag == "yes") 
+  db <- awards_db[indices,]
+  
+  db <- create_ticket_and_send_initial_correspondence(db) %>%
     send_annual_report_correspondence() %>%
     send_aon_correspondence() %>%
     send_one_month_remaining_correspondence() 
+  
+  awards_db[indices,] <- db
   
   return(awards_db)
 }
@@ -147,7 +152,7 @@ send_aon_correspondence <- function(awards_db){
 
   
 send_one_month_remaining_correspondence <- function(awards_db) {
-  indices <- which(dates == as.character(Sys.Date()))
+  indices <- which(awards_db$contact_1mo == as.character(Sys.Date()))
   db <- awards_db[indices,]
   
   for (i in seq_len(nrow(db))) {
