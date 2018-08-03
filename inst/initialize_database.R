@@ -16,10 +16,10 @@ db <- dplyr::bind_rows(db, awardsBot:::create_blank_database()) %>%
 row_all_NA <- which(apply(db, 1, function(x) all(is.na(x))))
 db <- db[-row_all_NA,]
 
-db[,expired_award_flag := ifelse(as.Date(expDate) > Sys.Date(), "not_expired", "expired")]
+db[,active_award_flag := ifelse(as.Date(expDate) > Sys.Date(), "yes", "no")]
 
 ## Initialize active awards contact dates ======================================
-indices <- which(db$expired_award_flag == "not_expired")
+indices <- which(db$active_award_flag == "yes")
 active_db <- db[indices,]
 
 active_db <- update_contact_dates(active_db, 8, 11, 6)
@@ -38,7 +38,7 @@ while(any(as.Date(active_db$contact_aon_next) < Sys.Date(), na.rm = TRUE)) {
                                         contact_aon_next)]
 }
 
-# Set 3 month contact before award expires
+# Set 1 month contact before award expires
 active_db$contact_1mo <- as.character((as.Date(active_db$expDate) %m+% months(-1)))
 
 

@@ -12,13 +12,13 @@ indices <- which(sapply(active_db$id, function(x) grepl(x, text)))
 length(indices) # 42/405 active awards are already in the ADC - don't need to contact these?
 active_db2 <- active_db[-indices,]
 
-indices_contact1mo <- which(as.Date(active_db$contact_1mo) < Sys.Date())
-length(indices_contact3mo) #49 awards have less than 3 months to go - contact these with report end reminder
-active_db <- active_db[-indices_contact3mo,]
+indices_contact1mo <- which(as.Date(active_db2$contact_1mo) <= Sys.Date())
+length(indices_contact1mo) #44 awards have less than 3 months to go - contact these with report end reminder
+active_db2 <- active_db2[-indices_contact1mo,]
 
-# 314 remaining 
-sort(unique(active_db$startDate))
-plyr::count(active_db$fundProgramName)
+# 417 remaining 
+sort(unique(active_db2$startDate))
+plyr::count(active_db2$fundProgramName)
 plyr::count(as.Date(active_db$startDate) > (Sys.Date() - months(12))) #190 - 2 years, #122 - 1.5 years, #106 - 1 year
 
 # plot remaining by time 

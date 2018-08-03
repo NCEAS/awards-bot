@@ -8,10 +8,15 @@
 #' 
 #' @importFrom magrittr "%>%" 
 send_correspondences <- function(awards_db) {
-  awards_db <- create_ticket_and_send_initial_correspondence(awards_db) %>%
+  indices <- which(awards_db$active_award_flag == "yes") 
+  db <- awards_db[indices,]
+  
+  db <- create_ticket_and_send_initial_correspondence(db) %>%
     send_annual_report_correspondence() %>%
     send_aon_correspondence() %>%
     send_one_month_remaining_correspondence() 
+  
+  awards_db[indices,] <- db
   
   return(awards_db)
 }
@@ -126,7 +131,7 @@ send_aon_correspondence <- function(awards_db){
   
   for (i in seq_len(nrow(db))) {
     # Create correspondence text 
-    template <- read_file(file.path(system.file("emails", "contact_aon", package = "awardsBot")))
+    template <- read_file(file.path(system.file("emails", "contact_aon_recurring", package = "awardsBot")))
     email_text <- sprintf(template,
                           db$piFirstName[i])
     
@@ -147,12 +152,12 @@ send_aon_correspondence <- function(awards_db){
 
   
 send_one_month_remaining_correspondence <- function(awards_db) {
-  indices <- which(dates == as.character(Sys.Date()))
+  indices <- which(awards_db$contact_1mo == as.character(Sys.Date()))
   db <- awards_db[indices,]
   
   for (i in seq_len(nrow(db))) {
     # Create correspondence text 
-    template <- read_file(file.path(system.file("emails", "contact_1mo", package = "awardsBot")))
+    template <- read_file(file.path(system.file("emails", "contact_one_month_remaining", package = "awardsBot")))
     email_text <- sprintf(template,
                           db$piFirstName[i],
                           db$id[i],
@@ -216,6 +221,21 @@ check_rt_reply <- function(reply, rt_ticket_number) {
   }
 } 
 
+## check RT correspondences 
+get_tickets_with_new_incoming_correspondence <- function(lastrun) {
+  # # RT search uses local time whereas the API uses UTC. Go figure.
+  # after_localtime = after.astimezone(pytz.timezone('America/Los_Angeles'))
+  # 
+  # # Start by getting recently updated tickets
+  # tickets = TRACKER.search(Queue='arcticdata',
+  #                          order='LastUpdated',
+  #                          LastUpdated__gt=after_localtime.strftime("%Y-%m-%d %H:%M:%S"))
+  # 
+  # # Filter to just those with new correspondence
+  # # from someone other than us in since LASTRUN
+  # return [get_recent_incoming_correspondence(ticket, after) for ticket in tickets]
+}
+
 ## helper function to read in email templates
 read_file <- function(path) {
   suppressWarnings(paste0(readLines(path), collapse = "\n"))
@@ -230,7 +250,7 @@ read_initial_template <- function(fundProgramName) {
   } else if (grepl("SOCIAL", fundProgramName)) {
     path <- file.path(system.file("emails", "contact_initial_social_sciences", package = "awardsBot"))
   } else {
-    path <- file.path(system.file("emails", "contact_initial", package = "awardsBot"))
+    path <- file.path(system.file("emails", "contact_initial_ans", package = "awardsBot"))
   }
   
   if (!file.exists(path)) {
