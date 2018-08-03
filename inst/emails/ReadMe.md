@@ -1,9 +1,12 @@
-#Contact Schedule:#
-- Send an initial congratulatory email at the start of each award, also highlights what is expected of them.
+**Awards Bot Contact Schedule**  
+The awards bot contacts principal investigators with reminders one month prior to an upcoming deadline.
+- *Start:* send an initial congratulatory email at the start of each award.  This also provides details on project-specific information and guidelines.  
   - [AON](https://github.com/NCEAS/awards-bot/blob/master/inst/emails/contact_initial_aon)
   - [ANS](https://github.com/NCEAS/awards-bot/blob/master/inst/emails/contact_initial_ans)
   - [ASSP](https://github.com/NCEAS/awards-bot/blob/master/inst/emails/contact_initial_social_sciences) 
-- Annual reports are due 3 months prior to the "anniversary" of the award.  We will send the first annual report reminder 8 months after the award start date, and annually afterwards.  
-  -[annual report reminder](https://github.com/NCEAS/awards-bot/blob/master/inst/emails/contact_annual_report)
-- Send a reminder to submit AON data 11 months after the start of the award, along with a recurring reminder every 6 months afterward
-  -[AON recurring](https://github.com/NCEAS/awards-bot/blob/master/inst/emails/contact_aon_recurring)
+- *Annual Report:* annual reports are due 3 months prior to the "anniversary" of the award.  We will send the first annual report reminder 8 months after the award start date, and annually afterwards.  
+  - [annual report reminder](https://github.com/NCEAS/awards-bot/blob/master/inst/emails/contact_annual_report)
+- *AON:* send a reminder to submit AON data 11 months after the start of the award, along with a recurring reminder every 6 months onward
+  - [AON recurring](https://github.com/NCEAS/awards-bot/blob/master/inst/emails/contact_aon_recurring)
+- *One month remaining:* Send a reminder that the award will expire in one month
+  - [one month remaining](https://github.com/NCEAS/awards-bot/blob/master/inst/emails/one_month_remaining)
