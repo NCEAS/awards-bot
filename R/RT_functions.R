@@ -221,20 +221,6 @@ check_rt_reply <- function(reply, rt_ticket_number) {
   }
 } 
 
-## check RT correspondences 
-get_tickets_with_new_incoming_correspondence <- function(lastrun) {
-  # # RT search uses local time whereas the API uses UTC. Go figure.
-  # after_localtime = after.astimezone(pytz.timezone('America/Los_Angeles'))
-  # 
-  # # Start by getting recently updated tickets
-  # tickets = TRACKER.search(Queue='arcticdata',
-  #                          order='LastUpdated',
-  #                          LastUpdated__gt=after_localtime.strftime("%Y-%m-%d %H:%M:%S"))
-  # 
-  # # Filter to just those with new correspondence
-  # # from someone other than us in since LASTRUN
-  # return [get_recent_incoming_correspondence(ticket, after) for ticket in tickets]
-}
 
 ## helper function to read in email templates
 read_file <- function(path) {
