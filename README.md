@@ -1,8 +1,7 @@
-# awardsBot
-[![Build Status]](https://travis-ci.org/NCEAS/awards-bot.svg?branch=master)](https://travis-ci.org/NCEAS/awards-bot)
+# awardsBot  
+[![Build Status](https://travis-ci.org/NCEAS/awards-bot.svg?branch=master)](https://travis-ci.org/NCEAS/awards-bot) 
 
-The NSF awards bot regularly contacts principal investigators with reminders on their project specific deadlines.
-
+The NSF awards bot regularly contacts principal investigators with reminders on their project specific deadlines.     
 
 ## How the bot works 
 Every 24 hours the bot queries NSF's award [API](https://www.research.gov/common/webapi/awardapisearch-v1.htm) for newly awarded grants and stores this information in a pre-existing database.  When it finds a new award it creates a new ticket in [Request Tracker](https://bestpractical.com/request-tracker/) and sends an initial correspondence that outlines project-specific expectations and deadlines.  It sends reminders to submit annual reports, submit data for Arctic Observing Network (AON) projects, and that the award is expiring soon.  The bot sends error messages to a slack channel. 
