@@ -1,4 +1,5 @@
-# awardsBot  
+# awardsBot <img src="man/figures/logo.png" align="right" width="129px" height="150px"/>
+
 [![Build Status](https://travis-ci.org/NCEAS/awards-bot.svg?branch=master)](https://travis-ci.org/NCEAS/awards-bot) 
 
 The NSF awards bot regularly contacts principal investigators with reminders on their project specific deadlines.     
