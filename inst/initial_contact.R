@@ -5,8 +5,8 @@ library(plotly)
 dim(active_db) # 405 active awards 
 
 # How many are not already in the ADC? 
-adc_info <- read.csv("/home/dmullen/Github/arctic-data/reporting/R/funding/funding_summary.csv", stringsAsFactors = FALSE)
-text <- paste(adc_info$funding_text, collapse = " ")
+adc_info <- read.csv('/home/dmullen/Github/arctic-data/reporting/R/funding/funding_summary.csv', stringsAsFactors = FALSE)
+text <- paste(adc_info$funding_text, collapse = ' ')
 indices <- which(sapply(active_db$id, function(x) grepl(x, text)))
 
 length(indices) # 42/405 active awards are already in the ADC - don't need to contact these?

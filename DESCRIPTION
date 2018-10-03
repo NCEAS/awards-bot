@@ -24,4 +24,4 @@ Suggests:
   testthat
 Remotes: 
   NCEAS/rt
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0

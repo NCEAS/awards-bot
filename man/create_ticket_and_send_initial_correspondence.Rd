@@ -14,6 +14,6 @@ awards_db (data.frame) The initial database with updated RT ticket numbers
 }
 \description{
 Run this code to create new RT tickets and send an initial correspondence, based 
-off a database of new NSF awards.  The database must include: fundProgramName,
-piEmail, piFirstName, id (NSF award #), title (NSF award title).
+off a database of new NSF awards.  The database must include: fund_program_name,
+pi_email, pi_first_name, id (NSF award #), title (NSF award title).
 }

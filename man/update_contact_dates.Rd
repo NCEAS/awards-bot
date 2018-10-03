@@ -10,9 +10,9 @@ update_contact_dates(awards_db, annual_report_time, initial_aon_offset,
 \arguments{
 \item{awards_db}{(data.frame) awards database}
 
-\item{annual_report_time}{(numeric) time in months after 'startDate' to send the first annual report reminder}
+\item{annual_report_time}{(numeric) time in months after 'start_date' to send the first annual report reminder}
 
-\item{initial_aon_offset}{(numeric) time in months after 'startDate' to send the first aon data reminder}
+\item{initial_aon_offset}{(numeric) time in months after 'start_date' to send the first aon data reminder}
 
 \item{aon_recurring_interval}{(numeric) time in months to send aon data recurring reminders}
 }

@@ -1,27 +1,27 @@
 ## Testing functions 
 
 create_blank_database <- function() {
-  col_names <- c("awardee",
-                 "date",
-                 "expDate",
-                 "fundProgramName",
-                 "id",
-                 "piEmail",
-                 "piFirstName",
-                 "piLastName",
-                 "piPhone",
-                 "poName",
-                 "startDate",
-                 "title",
-                 "rtTicket",
-                 "piORCID",
-                 "contact_initial",
-                 "contact_annual_report_previous",
-                 "contact_annual_report_next",
-                 "contact_aon_previous",
-                 "contact_aon_next",
-                 "contact_1mo",
-                 "active_award_flag")
+  col_names <- c('awardee',
+                 'date',
+                 'exp_date',
+                 'fund_program_name',
+                 'id',
+                 'pi_email',
+                 'pi_first_name',
+                 'pi_last_name',
+                 'pi_phone',
+                 'po_name',
+                 'start_date',
+                 'title',
+                 'rt_ticket',
+                 'pi_orcid',
+                 'contact_initial',
+                 'contact_annual_report_previous',
+                 'contact_annual_report_next',
+                 'contact_aon_previous',
+                 'contact_aon_next',
+                 'contact_1mo',
+                 'active_award_flag')
    
   blank_db <- data.frame(matrix(ncol = length(col_names), nrow = 1))
   colnames(blank_db) <- col_names
@@ -42,10 +42,10 @@ write_blank_database <- function(path) {
 ## TODO - this doesn't appear to work properly 
 write_inst_database <- function() {
   db <- create_blank_database() %>%
-    update_awards(from_date = as.Date("2018-06-28"), to_date = as.Date("2018-07-05")) %>%
+    update_awards(from_date = as.Date('2018-06-28'), to_date = as.Date('2018-07-05')) %>%
     check_date_format() %>%
     apply(2, as.character) 
-  utils::write.csv(db[2:3,], file.path(system.file("example_db.csv", package = "awardsBot")),
+  utils::write.csv(db[2:3,], file.path(system.file('example_db.csv', package = 'awardsBot')),
                    row.names = FALSE)
 }
 
@@ -53,13 +53,13 @@ write_inst_database <- function() {
 create_dummy_database <- function() {
   db <- create_blank_database()
   
-  db$piEmail <- "mullen@nceas.ucsb.edu"
-  db$piFirstName <- "Dominic"
-  db$piLastName <- "Mullen"
-  db$title <- "**Test** AwardBot Title"
-  db$fundProgramName <- "ARCTIC NATURAL SCIENCES"
-  db$id <- "1234567"  # NSF award number 
-  db$startDate <- "2016-01-01"
+  db$pi_email <- 'mullen@nceas.ucsb.edu'
+  db$pi_first_name <- 'Dominic'
+  db$pi_last_name <- 'Mullen'
+  db$title <- '**Test** AwardBot Title'
+  db$fund_program_name <- 'ARCTIC NATURAL SCIENCES'
+  db$id <- '1234567'  # NSF award number 
+  db$start_date <- '2016-01-01'
   
   return(db)
 }
