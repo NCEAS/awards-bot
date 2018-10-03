@@ -2,9 +2,11 @@
 ## Storing this script in inst for historical interest
 library(data.table)
 library(dplyr)
+library(lubridate)
+library(magrittr)
 
-db <- get_awards(to_date = "07/31/2018")  # pulls all awards up to the current date
-write.csv(db, file = file.path(tempdir(), "temp_db.csv"), row.names = FALSE)
+db <- awardsBot::get_awards(to_date = format.Date(Sys.Date(), '%m/%d/%Y'))  # pulls all awards up to the current date
+write.csv(db, file = file.path(tempdir(), 'temp_db.csv'), row.names = FALSE)
 
 db <- dplyr::bind_rows(db, awardsBot:::create_blank_database()) %>%
   apply(2, as.character) %>%
@@ -16,10 +18,11 @@ db <- dplyr::bind_rows(db, awardsBot:::create_blank_database()) %>%
 row_all_NA <- which(apply(db, 1, function(x) all(is.na(x))))
 db <- db[-row_all_NA,]
 
-db[,active_award_flag := ifelse(as.Date(expDate) > Sys.Date(), "yes", "no")]
+# Filter out expired awards 
+db %>% filter(exp_d)
 
 ## Initialize active awards contact dates ======================================
-indices <- which(db$active_award_flag == "yes")
+indices <- which(db$active_award_flag == 'yes')
 active_db <- db[indices,]
 
 active_db <- update_contact_dates(active_db, 8, 11, 6)
@@ -40,5 +43,4 @@ while(any(as.Date(active_db$contact_aon_next) < Sys.Date(), na.rm = TRUE)) {
 
 # Set 1 month contact before award expires
 active_db$contact_1mo <- as.character((as.Date(active_db$expDate) %m+% months(-1)))
-
 

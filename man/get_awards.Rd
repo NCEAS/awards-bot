@@ -2,7 +2,7 @@
 % Please edit documentation in R/database_functions.R
 \name{get_awards}
 \alias{get_awards}
-\title{Get NSF Arctic/Polar program award information}
+\title{Get NSF Arctic/Polar program award information.}
 \usage{
 get_awards(from_date = NULL, to_date = NULL, query = NULL,
   print_fields = NULL)
@@ -17,7 +17,7 @@ records with start date before specified date.
 Format = \emph{mm/dd/yyyy}}
 
 \item{query}{(character) Optional. By default, the function
-searches for all awards with either "polar" or "arctic" in
+searches for all awards with either 'polar' or 'arctic' in
 the fundProgramName. Additional queries can be specified
 as defined in the \href{https://www.research.gov/common/webapi/awardapisearch-v1.htm}{NSF API}.
 Use '&' to join multiple queries (i.e., \emph{keyword=water&agency=NASA})}
@@ -31,12 +31,13 @@ of the \href{https://www.research.gov/common/webapi/awardapisearch-v1.htm}{NSF A
 }
 \description{
 Uses the \href{https://www.research.gov/common/webapi/awardapisearch-v1.htm}{NSF API}
-to get all records pertaining to the Arctic or Polar programs.
+to get all records pertaining to the Arctic or Polar programs. Originally in the
+'NCEAS/datamgmt' package.  Added to this repo because the import of datamgmt is too costly.
 }
 \examples{
 \dontrun{
 all_awards <- get_awards()
-new_awards <- get_awards(from_date = "01/01/2017")
+new_awards <- get_awards(from_date = '01/01/2017')
 }
 }
 \author{
