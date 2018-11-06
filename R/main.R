@@ -24,13 +24,13 @@ main <- function(database_path = Sys.getenv('DATABASE_PATH'),
 }
 
 # Wrapper for main, with additional email testing argument. 
-test_main <- function(database_path = Sys.getenv('DATABASE_PATH'),
+test_main <- function(email,
+                      database_path = Sys.getenv('DATABASE_PATH'),
                       lastrun_path = Sys.getenv('LASTRUN_PATH'),
                       current_date = as.character(Sys.Date()),
                       annual_report_time = Sys.getenv('ANNUAL_REPORT_TIME'),
                       initial_aon_offset = Sys.getenv('INITIAL_AON_OFFSET'),
-                      aon_recurring_interval = Sys.getenv('AON_RECURRING_INTERVAL'),
-                      email) {
+                      aon_recurring_interval = Sys.getenv('AON_RECURRING_INTERVAL')) {
   # Change email to testing email 
   db <- import_awards_db(database_path)
   db$pi_email <- email

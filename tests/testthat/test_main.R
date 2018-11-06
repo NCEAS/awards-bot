@@ -27,13 +27,13 @@ test_that('main sends correspondences and updates the database', {
   
   
   ## This iteration of main() should create two RT tickets, send initial correspondence emails, and update contact times in the database
-  test_main(database_path = database_path, 
+  test_main(email = email,
+            database_path = database_path, 
             lastrun_path = lastrun_path, 
             current_date = as.character(Sys.Date()),
             annual_report_time = annual_report_time,
             initial_aon_offset = initial_aon_offset,
-            aon_recurring_interval = aon_recurring_interval,
-            email = email)
+            aon_recurring_interval = aon_recurring_interval)
 
   db <- import_awards_db(database_path)
   expect_type(db$rt_ticket, 'character')
@@ -46,13 +46,13 @@ test_that('main sends correspondences and updates the database', {
   ## Test that main() sends annual report reminders 
   db$contact_annual_report_next <- as.character(Sys.Date())
   utils::write.csv(db, database_path, row.names = FALSE)
-  test_main(database_path = database_path, 
+  test_main(email = email,
+            database_path = database_path, 
             lastrun_path = lastrun_path, 
             current_date = as.character(Sys.Date()),
             annual_report_time = annual_report_time,
             initial_aon_offset = initial_aon_offset,
-            aon_recurring_interval = aon_recurring_interval,
-            email = email)
+            aon_recurring_interval = aon_recurring_interval)
   
   db <- import_awards_db(database_path)
   expect_equal(db$contact_annual_report_previous, rep(as.character(Sys.Date()), 2))
@@ -60,13 +60,13 @@ test_that('main sends correspondences and updates the database', {
   ## Test that main sends AON reminders and moves next annual report reminder date ahead 1 year 
   db$contact_aon_next[1] <- as.character(Sys.Date())
   utils::write.csv(db, database_path, row.names = FALSE)
-  test_main(database_path = database_path, 
+  test_main(email = email,
+            database_path = database_path, 
             lastrun_path = lastrun_path, 
             current_date = as.character(Sys.Date()),
             annual_report_time = annual_report_time,
             initial_aon_offset = initial_aon_offset,
-            aon_recurring_interval = aon_recurring_interval,
-            email = email)
+            aon_recurring_interval = aon_recurring_interval)
   
   db <- import_awards_db(database_path)
   expect_equal(db$contact_aon_previous[1], as.character(Sys.Date()))
@@ -75,13 +75,13 @@ test_that('main sends correspondences and updates the database', {
   ## Test that main sends one month remaining reminders and moves next annual aon data reminder date ahead by 'aon_recurring_interval' months
   db$exp_date <- as.character(Sys.Date() %m+% months(1))
   utils::write.csv(db, database_path, row.names = FALSE)
-  test_main(database_path = database_path, 
+  test_main(email = email,
+            database_path = database_path, 
             lastrun_path = lastrun_path, 
             current_date = as.character(Sys.Date()),
             annual_report_time = annual_report_time,
             initial_aon_offset = initial_aon_offset,
-            aon_recurring_interval = aon_recurring_interval,
-            email = email)
+            aon_recurring_interval = aon_recurring_interval)
   
   db <- import_awards_db(database_path)
   expect_equal(db$contact_1mo, rep(as.character(Sys.Date()), 2))
