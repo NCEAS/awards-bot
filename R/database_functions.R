@@ -91,8 +91,8 @@ set_first_annual_report_due_date <- function(awards_db, annual_report_time) {
   
   # Initialize first annual report as 'annual_report_time' months after 'start_date'
   start_date <- lubridate::ymd(db$start_date)
-  db$contact_annual_report_next <- start_date %m+% months(annual_report_time) %>%
-    as.character()
+  db$contact_annual_report_next <- 
+    start_date %m+% months(as.integer(annual_report_time)) %>% as.character()
   
   awards_db[indices,] <- db
   
@@ -121,8 +121,8 @@ set_first_aon_data_due_date <- function(awards_db, initial_aon_offset){
   
   # Initialize first aon submissions as 'initial_aon_offset' months after 'start_date'
   start_date <- lubridate::ymd(db$start_date)
-  db$contact_aon_next <- start_date %m+% months(initial_aon_offset) %>%
-    as.character()
+  db$contact_aon_next <- 
+    start_date %m+% months(as.integer(initial_aon_offset)) %>% as.character()
   
   awards_db[indices,] <- db
   
@@ -135,8 +135,8 @@ update_aon_data_due_date <- function(awards_db, aon_recurring_interval) {
   
   # Set next aon data due date ahead 'aon_recurring_interval' months
   date <- lubridate::ymd(db$contact_aon_next)
-  db$contact_aon_next <- (date %m+% months(aon_recurring_interval)) %>%
-    as.character()
+  db$contact_aon_next <- 
+    (date %m+% months(as.integer(aon_recurring_interval))) %>% as.character()
   
   awards_db[indices,] <- db
   
