@@ -1,3 +1,5 @@
+# Set the CRAN mirror to use
+options(repos=structure(c(CRAN="https://cran.cnr.berkeley.edu/")))
 # Check for installed dependencies
 packages <- 
     c("dplyr", "lubridate", "magrittr", "RCurl", "slackr", "stringr", "XML", "devtools")
@@ -28,7 +30,7 @@ library(rt)
 
 ## Source the bot
 if (!("awardsBot" %in% installed.packages()[,"Package"]) ) {
-    remotes::install_github('NCEAS/awards-bot')
+    remotes::install_github('NCEAS/awards-bot@1.0.3')
 }
 library(awardsBot)
 
