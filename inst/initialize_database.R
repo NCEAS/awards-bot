@@ -9,6 +9,12 @@ if(Sys.getenv('DATABASE_PATH') == "") {
   stop('Set Sys.getenv("DATABASE_PATH") in .Renviron file')
 }
 
+# Set up the environment and Slack
+readRenviron(file.path(getwd(), '.Renviron'))
+slackr::slackr_setup(channel = '#awardbot', username = 'awardbot',
+                     incoming_webhook_url = Sys.getenv('SLACK_WEBHOOK_URL'))
+
+
 db <- awardsBot::get_awards(to_date = format.Date(Sys.Date(), '%m/%d/%Y'))  # pulls all awards up to the current date
 
 # Update column names
