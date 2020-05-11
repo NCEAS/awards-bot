@@ -2,22 +2,23 @@ Dear %s,
 
 Congratulations on your new NSF Arctic Sciences award %s %s.
 
-The NSF-funded Arctic Data Center (https://arcticdata.io/) support team is passionate about Arctic science. We are here to support researchers like yourself in storing and sharing valuable data.
+The NSF-funded Arctic Data Center support team is here to for researchers like yourself in storing and sharing valuable data.
 
-We are contacting you today because projects funded by the NSF ARC Arctic Observing Network (AON) program have specific requirements for data and metadata storage. The Arctic Data Center is a long-lived, publicly accessible archive that was created to help researchers meet the NSF data and metadata storage requirements.
+We are contacting you today because projects funded by the NSF ARC Arctic Observing Network (AON) program have specific requirements for data and metadata storage. The Arctic Data Center is a long-lived, publicly accessible archive that was created to help researchers meet the storage requirements.
 
-At this time, please note that NSF requires all metadata created during your project be submitted to a national data center or another long-lived, publicly accessible archive within two years of collection or before the end of your award, whichever comes first. Additionally, data and derived data products are required to be submitted within 6 months of collection. More detailed information about what will be expected of you can be found at https://arcticdata.io/submit/#who-must-submit.
-
-With these requirements in mind, we strongly recommend that you plan to keep detailed and well-documented data and metadata records throughout your project. For best practices, the "Organizing Your Data" section (https://arcticdata.io/submit/#organizing-your-data) provides some guidelines.
-
-If your research will involve large submissions (a total size of 500MB or more), please get in touch with us so we can create a plan together for those datasets.
-
-We also wanted to highlight the data portals feature at the Arctic Data Center. If your project involves multiple related datasets, such as those that are part of a larger research project or organization, a data portal can allow datasets to be discovered together. Here is an example page that we created for the Distributed Biological Observatory: https://arcticdata.io/catalog/portals/DBO. More information on how to create a data portal  can be found here: https://arcticdata.io/data-portals/.
-
-Please note that for AON program projects, NSF requires that:
-    - Real-time data be made publicly available immediately. If there is any question about what constitutes real-time data, please contact the appropriate NSF program officer.
+Please note that for AON program projects, NSF has the additional requirements:
+    - Real-time data be made publicly available immediately. 
     - All data be submitted to a national data center or another long-lived, publicly accessible archive within 6 months of collection, and be fully quality controlled.
     - All data sets and derived data products be accompanied by a metadata profile and full documentation that allows the data to be properly interpreted and used by other researchers.
+
+More detailed information about what will be expected of you can be found at:
+https://arcticdata.io/submit/#who-must-submit.
+
+With these requirements in mind, we strongly recommend that you plan to keep detailed and well-documented data and metadata records throughout your project. Some guidelines are provided here: https://arcticdata.io/submit/#organizing-your-data for best practices. For those who are interested, we also have annual training opportunities posted here: https://arcticdata.io/training/.
+
+If your research will involve large submissions of data (a total size of 500MB or more), please get in touch with us so we can create a plan together for those datasets.
+
+We also wanted to highlight the data portals feature at the Arctic Data Center. If your project involves multiple related datasets, such as those that are part of a larger research project or organization, a data portal can allow datasets to be discovered together. More information on how to create a data portal and examples can be found here: https://arcticdata.io/data-portals/.
 
 If you have any questions about the Arctic Data Center or NSF requirements, please reply to this email and we will respond as soon as possible. We are excited to work with you to find the best way to store your unique datasets.
 
