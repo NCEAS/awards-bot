@@ -7,7 +7,7 @@ The NSF-funded Arctic Data Center support team is here to for researchers like y
 We are contacting you today because projects funded by the NSF ARC Arctic Observing Network (AON) program have specific requirements for data and metadata storage. The Arctic Data Center is a long-lived, publicly accessible archive that was created to help researchers meet the storage requirements.
 
 Please note that for AON program projects, NSF has the additional requirements:
-    - Real-time data be made publicly available immediately. 
+    - Real-time data be made publicly available immediately. For what data is considered real-time, please contact the appropriate NSF program officer.
     - All data be submitted to a national data center or another long-lived, publicly accessible archive within 6 months of collection, and be fully quality controlled.
     - All data sets and derived data products be accompanied by a metadata profile and full documentation that allows the data to be properly interpreted and used by other researchers.
 
@@ -16,7 +16,7 @@ https://arcticdata.io/submit/#who-must-submit.
 
 With these requirements in mind, we strongly recommend that you plan to keep detailed and well-documented data and metadata records throughout your project. Some guidelines are provided here: https://arcticdata.io/submit/#organizing-your-data for best practices. For those who are interested, we also have annual training opportunities posted here: https://arcticdata.io/training/.
 
-If your research will involve large submissions of data (a total size of 500MB or more), please get in touch with us so we can create a plan together for those datasets.
+For data collected on a continual basis, we can work with you to automate your data deposits to the Arctic Data Center. If your research will involve large data submissions (a total size of > 100 GB or more than 500 files), please get in touch with us so we can create a plan together for those datasets.
 
 We also wanted to highlight the data portals feature at the Arctic Data Center. If your project involves multiple related datasets, such as those that are part of a larger research project or organization, a data portal can allow datasets to be discovered together. More information on how to create a data portal and examples can be found here: https://arcticdata.io/data-portals/.
 
