@@ -10,7 +10,7 @@ Every 24 hours the bot queries NSF's award [API](https://www.research.gov/common
 ## Setup 
 - Copy the bot [cron script](https://github.com/NCEAS/awards-bot/blob/master/inst/main_cron_script.R) to a directory 
 
-- Create a file called `.Renviron` in the same directory as the script
+- Create a file called `.Renviron` in the same directory as the script. the `.Renviron` can be accessed by `usethis::edit_r_environ()`
   Include the following variables: 
   ```text
   DATABASE_PATH                            # Path to the database of awards and correspondences
@@ -23,6 +23,8 @@ Every 24 hours the bot queries NSF's award [API](https://www.research.gov/common
   INITIAL_AON_OFFSET=11                    # Number of months after award startDate to send first AON data due reminder
   AON_RECURRING_INTERVAL=6                 # Number of months to send recurring emails for AON data due
   ```
+  
+- If you have issues logging in you might need to install the development branch of rt `remotes::install_github("nceas/rt@develop")`
 
 ## Running 
 Run the bot [cron script](https://github.com/NCEAS/awards-bot/blob/master/inst/main_cron_script.R) every 24 hours.    
