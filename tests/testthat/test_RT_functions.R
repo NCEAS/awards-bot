@@ -1,3 +1,4 @@
+library(rt)
 context('Send RT correspondences')
 
 rt_url <- 'https://support.nceas.ucsb.edu/rt'
@@ -10,6 +11,8 @@ test_that('we can create an RT ticket', {
   }
   
   db <- create_dummy_database()
+  
+  #does not return ticket but creates ticket
   ticket <- create_ticket(db$id, db$pi_email)
   
   expect_type(ticket, 'character')
@@ -39,7 +42,7 @@ test_that('we can send an initial correspondence', {
   db <- create_ticket_and_send_initial_correspondence(db)
   
   ticket <- rt::rt_ticket_properties(db$rt_ticket, rt_url)
-  expect_equal(ticket$content$Requestors, 'mullen@nceas.ucsb.edu')
+  expect_equal(ticket$content$Requestors, 'jasminelai@nceas.ucsb.edu')
 })
 
 test_that('we can send an annual report correspondence', {

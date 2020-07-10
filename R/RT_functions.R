@@ -36,18 +36,19 @@ create_ticket <- function(award, requestor) {
                                  requestor = requestor,
                                  subject = subject,
                                  rt_base = 'https://support.nceas.ucsb.edu/rt')
+  #what is this chunk supposed to do?
+  # if (!grepl('created', httr::content(ticket))) {
+  #   out <- sprintf('I failed to create a ticket for award: %s, from requestor: %s', award, requestor)
+  #   slackr::slackr_bot(out)
+  #   return('rt_ticket_create_error')
+  # }
+  # 
+  # # get ticket_id
+  # ticket_id <- rawToChar(ticket$content) %>%
+  #   gsub('(.*Ticket )([[:digit:]]+)( created.*)', '\\2', .)
   
-  if (!grepl('created', httr::content(ticket))) {
-    out <- sprintf('I failed to create a ticket for award: %s, from requestor: %s', award, requestor)
-    slackr::slackr_bot(out)
-    return('rt_ticket_create_error')
-  }
-  
-  # get ticket_id
-  ticket_id <- rawToChar(ticket$content) %>%
-    gsub('(.*Ticket )([[:digit:]]+)( created.*)', '\\2', .)
-  
-  return(ticket_id)
+  # return(ticket_id)
+  return(ticket)
 }
 
 
@@ -224,7 +225,7 @@ check_rt_reply <- function(reply, rt_ticket_number) {
 
 ## helper function to read in email templates
 read_file <- function(path) {
-  suppressWarnings(paste0(readLines(path), collapse = '\n'))
+  suppressWarnings(paste0(readLines(path), collapse = '\n '))
 }
 
 ## helper function read in general, AON, or SS initial template
