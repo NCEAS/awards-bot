@@ -7,7 +7,7 @@ The NSF awards bot regularly contacts principal investigators with reminders on 
 ## How the bot works 
 Every 24 hours the bot queries NSF's award [API](https://www.research.gov/common/webapi/awardapisearch-v1.htm) for newly awarded grants and stores this information in a pre-existing database.  When it finds a new award it creates a new ticket in [Request Tracker](https://bestpractical.com/request-tracker/) and sends an initial correspondence that outlines project-specific expectations and deadlines.  It sends reminders to submit annual reports, submit data for Arctic Observing Network (AON) projects, and that the award is expiring soon.  The bot sends error messages to a slack channel. 
 
-## Setup 
+## Setup for testing locally
 - Copy the bot [cron script](https://github.com/NCEAS/awards-bot/blob/master/inst/main_cron_script.R) to a directory 
 
 - Create a file called `.Renviron` in the same directory as the script. the `.Renviron` can be accessed by `usethis::edit_r_environ()`
@@ -25,6 +25,9 @@ Every 24 hours the bot queries NSF's award [API](https://www.research.gov/common
   ```
   
 - If you have issues logging in you might need to install the development branch of rt `remotes::install_github("nceas/rt@develop")`
+- If you are running locally you might need to set up slackbot `slackr::slackr_setup(channel = "#awardbot",incoming_webhook_url = Sys.getenv("SLACK_WEBHOOK_URL"))`
+
+**Note** - please contact Chris for set up in Linux
 
 ## Running 
 Run the bot [cron script](https://github.com/NCEAS/awards-bot/blob/master/inst/main_cron_script.R) every 24 hours.    
@@ -60,4 +63,4 @@ Work on this package was supported by:
 
 Additional support was provided by the National Center for Ecological Analysis and Synthesis, a Center funded by the University of California, Santa Barbara, and the State of California.
 
-[![nceas_footer](https://www.nceas.ucsb.edu/files/newLogo_0.png)](http://www.nceas.ucsb.edu)
+<img src="https://live-ncea-ucsb-edu-v01.pantheonsite.io/sites/default/files/2020-03/NCEAS-full%20logo-4C.png" width=50% height=50%>
