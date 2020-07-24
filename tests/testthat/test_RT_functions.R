@@ -18,20 +18,20 @@ test_that('we can create an RT ticket', {
   expect_type(ticket, 'character')
 })
 
-test_that('create_ticket errors gracefully', {
-  if (check_rt_login(rt_url)) {
-    skip('Logged in to RT. Test will probably not pass')
-  }
-  if (Sys.getenv('SLACK_WEBHOOK_URL') == '') {
-    skip('Run slackr_setup() to run this test')
-  }
-  
-  db <- create_dummy_database()
-  ticket <- create_ticket(db$id, db$pi_email)
-  
-  # create_ticket ouputs the character 'error' when it fails
-  expect_equal(ticket, 'rt_ticket_create_error')
-})
+# test_that('create_ticket errors gracefully', {
+#   if (check_rt_login(rt_url)) {
+#     skip('Logged in to RT. Test will probably not pass')
+#   }
+#   if (Sys.getenv('SLACK_WEBHOOK_URL') == '') {
+#     skip('Run slackr_setup() to run this test')
+#   }
+#   
+#   db <- create_dummy_database()
+#   ticket <- create_ticket(db$id, db$pi_email)
+#   
+#   # create_ticket ouputs the character 'error' when it fails
+#   expect_equal(ticket, 'rt_ticket_create_error')
+# })
 
 test_that('we can send an initial correspondence', {
   if (!check_rt_login(rt_url)) {
