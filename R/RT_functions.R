@@ -37,16 +37,6 @@ create_ticket <- function(award, requestor) {
                                  subject = subject,
                                  rt_base = 'https://support.nceas.ucsb.edu/rt')
 
-   # if (!grepl('created', httr::content(ticket))) {
-   #   out <- sprintf('I failed to create a ticket for award: %s, from requestor: %s', award, requestor)
-   #   slackr::slackr_bot(out)
-   #   return('rt_ticket_create_error')
-   # }
-  
-   # get ticket_id
-   # ticket_id <- rawToChar(ticket$content) %>%
-   #   gsub('(.*Ticket )([[:digit:]]+)( created.*)', '\\2', .)
-   # return(ticket_id)
   return(ticket)
 }
 
