@@ -36,6 +36,13 @@ create_ticket <- function(award, requestor) {
                                  requestor = requestor,
                                  subject = subject,
                                  rt_base = 'https://support.nceas.ucsb.edu/rt')
+  
+  #check to see if the object ticket is created successfully
+  if (exists("ticket")) {
+    out <- sprintf('I failed to create a ticket for award: %s, from requestor: %s', award, requestor)	
+    slackr::slackr_bot(out)	
+    return('rt_ticket_create_error')	
+  }
 
   return(ticket)
 }
