@@ -47,7 +47,6 @@ test_main <- function(database_path = Sys.getenv('DATABASE_PATH'),
   db$pi_email <- email
   utils::write.csv(db, database_path, row.names = FALSE)
   
-  #runs fine individually but has issues when run from the top
   main(database_path = database_path, lastrun_path = lastrun_path, current_date = current_date,
        annual_report_time = annual_report_time, initial_aon_offset = initial_aon_offset,
        aon_recurring_interval = aon_recurring_interval)
