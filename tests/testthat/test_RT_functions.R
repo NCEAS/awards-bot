@@ -74,6 +74,22 @@ test_that('one error in the database does not the initial contact for loop', {
   # this is the test for 'rt_ticket_create_error' error handling
 })
 
-test_that('check_rt_reply catches both potential errors', {})
+test_that('check_rt_reply catches both potential errors', {
+  if (!check_rt_login(rt_url)) {
+    skip('Not logged in to RT. Skipping Test.')
+  }
+  
+  db <- create_dummy_database()
+  db <- create_ticket_and_send_initial_correspondence(db)
+  
+  template <- read_initial_template(db$fund_program_name[1])
+  email_text <- sprintf(template,
+                        db$pi_first_name[1],
+                        db$id[1],
+                        db$title[1])
+  
+  reply <- check_rt_reply(db$rt_ticket[1], email_text)
+  expect_type(reply, "double")
+})
 
 test_that('send correspondences works', {})
