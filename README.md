@@ -24,6 +24,7 @@ Every 24 hours the bot queries NSF's award [API](https://www.research.gov/common
   AON_RECURRING_INTERVAL=6                 # Number of months to send recurring emails for AON data due
   ```
   
+- If you have issues logging in you might need to install the development branch of rt `remotes::install_github("nceas/rt@develop")`
 - If you are running locally you might need to set up slackbot `slackr::slackr_setup(channel = "#awardbot",incoming_webhook_url = Sys.getenv("SLACK_WEBHOOK_URL"))`
 
 **Note** - please contact Chris for set up in Linux
