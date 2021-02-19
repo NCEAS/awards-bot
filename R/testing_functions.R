@@ -53,7 +53,7 @@ write_inst_database <- function() {
 create_dummy_database <- function() {
   db <- create_blank_database()
   
-  db$pi_email <- 'mullen@nceas.ucsb.edu'
+  db$pi_email <- 'jasminelai@nceas.ucsb.edu'
   db$pi_first_name <- 'Dominic'
   db$pi_last_name <- 'Mullen'
   db$title <- '**Test** AwardBot Title'
@@ -71,3 +71,4 @@ with_dir <- function(directory, expr) {
   setwd(directory)
   evalq(expr)
 }
+

@@ -5,6 +5,12 @@ main <- function(database_path = Sys.getenv('DATABASE_PATH'),
                  annual_report_time = Sys.getenv('ANNUAL_REPORT_TIME'),
                  initial_aon_offset = Sys.getenv('INITIAL_AON_OFFSET'),
                  aon_recurring_interval = Sys.getenv('AON_RECURRING_INTERVAL')) {
+  
+  annual_report_time <-  as.numeric(annual_report_time)
+  initial_aon_offset <-  as.numeric(initial_aon_offset)
+  aon_recurring_interval <-  as.numeric(aon_recurring_interval)
+  
+  
   ## Import awards database 
   db <- import_awards_db(database_path)
   
@@ -31,6 +37,11 @@ test_main <- function(database_path = Sys.getenv('DATABASE_PATH'),
                       initial_aon_offset = Sys.getenv('INITIAL_AON_OFFSET'),
                       aon_recurring_interval = Sys.getenv('AON_RECURRING_INTERVAL'),
                       email) {
+  
+  annual_report_time <-  as.numeric(annual_report_time)
+  initial_aon_offset <-  as.numeric(initial_aon_offset)
+  aon_recurring_interval <-  as.numeric(aon_recurring_interval)
+  
   # Change email to testing email 
   db <- import_awards_db(database_path)
   db$pi_email <- email

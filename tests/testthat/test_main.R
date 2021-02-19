@@ -16,7 +16,7 @@ test_that('main sends correspondences and updates the database', {
   annual_report_time <- 8 
   initial_aon_offset <- 11 
   aon_recurring_interval <- 6 
-  email <- 'mullen@nceas.ucsb.edu'  # set to the test email you're using.  
+  email <- 'jasminelai@nceas.ucsb.edu'  # set to the test email you're using.  
   
   ## Initialize database and lastrun
   db <- import_awards_db(file.path(system.file('example_db.csv', package = 'awardsBot')))

@@ -1,3 +1,4 @@
+library(rt)
 context('Send RT correspondences')
 
 rt_url <- 'https://support.nceas.ucsb.edu/rt'
@@ -10,24 +11,11 @@ test_that('we can create an RT ticket', {
   }
   
   db <- create_dummy_database()
+  
+  #does not return ticket but creates ticket
   ticket <- create_ticket(db$id, db$pi_email)
   
-  expect_type(ticket, 'character')
-})
-
-test_that('create_ticket errors gracefully', {
-  if (check_rt_login(rt_url)) {
-    skip('Logged in to RT. Test will probably not pass')
-  }
-  if (Sys.getenv('SLACK_WEBHOOK_URL') == '') {
-    skip('Run slackr_setup() to run this test')
-  }
-  
-  db <- create_dummy_database()
-  ticket <- create_ticket(db$id, db$pi_email)
-  
-  # create_ticket ouputs the character 'error' when it fails
-  expect_equal(ticket, 'rt_ticket_create_error')
+  expect_type(ticket, 'double')
 })
 
 test_that('we can send an initial correspondence', {
@@ -38,8 +26,8 @@ test_that('we can send an initial correspondence', {
   db <- create_dummy_database()
   db <- create_ticket_and_send_initial_correspondence(db)
   
-  ticket <- rt::rt_ticket_properties(db$rt_ticket, rt_url)
-  expect_equal(ticket$content$Requestors, 'mullen@nceas.ucsb.edu')
+  ticket <- rt::rt_ticket_properties(db$rt_ticket)
+  expect_equal(ticket$Requestors, 'jasminelai@nceas.ucsb.edu')
 })
 
 test_that('we can send an annual report correspondence', {
@@ -86,6 +74,22 @@ test_that('one error in the database does not the initial contact for loop', {
   # this is the test for 'rt_ticket_create_error' error handling
 })
 
-test_that('check_rt_reply catches both potential errors', {})
+test_that('check_rt_reply catches both potential errors', {
+  if (!check_rt_login(rt_url)) {
+    skip('Not logged in to RT. Skipping Test.')
+  }
+  
+  db <- create_dummy_database()
+  db <- create_ticket_and_send_initial_correspondence(db)
+  
+  template <- read_initial_template(db$fund_program_name[1])
+  email_text <- sprintf(template,
+                        db$pi_first_name[1],
+                        db$id[1],
+                        db$title[1])
+  
+  reply <- check_rt_reply(db$rt_ticket[1], email_text)
+  expect_type(reply, "double")
+})
 
 test_that('send correspondences works', {})

@@ -4,8 +4,12 @@
 \alias{update_contact_dates}
 \title{Update contact dates in awards database}
 \usage{
-update_contact_dates(awards_db, annual_report_time, initial_aon_offset,
-  aon_recurring_interval)
+update_contact_dates(
+  awards_db,
+  annual_report_time,
+  initial_aon_offset,
+  aon_recurring_interval
+)
 }
 \arguments{
 \item{awards_db}{(data.frame) awards database}

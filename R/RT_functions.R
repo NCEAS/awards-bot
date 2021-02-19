@@ -37,17 +37,14 @@ create_ticket <- function(award, requestor) {
                                  subject = subject,
                                  rt_base = 'https://support.nceas.ucsb.edu/rt')
   
-  if (!grepl('created', httr::content(ticket))) {
-    out <- sprintf('I failed to create a ticket for award: %s, from requestor: %s', award, requestor)
-    slackr::slackr_bot(out)
-    return('rt_ticket_create_error')
+  #check to see if the object ticket is created successfully
+  if(!exists("ticket")) {
+    out <- sprintf('I failed to create a ticket for award: %s, from requestor: %s', award, requestor)	
+    slackr::slackr_bot(out)	
+    return('rt_ticket_create_error')	
   }
-  
-  # get ticket_id
-  ticket_id <- rawToChar(ticket$content) %>%
-    gsub('(.*Ticket )([[:digit:]]+)( created.*)', '\\2', .)
-  
-  return(ticket_id)
+
+  return(ticket)
 }
 
 
@@ -78,10 +75,7 @@ create_ticket_and_send_initial_correspondence <- function(awards_db) {
                           db$id[i],
                           db$title[i])
     
-    reply <- rt::rt_ticket_history_reply(ticket_id = db$rt_ticket[i],
-                                         text = email_text,
-                                         rt_base = 'https://support.nceas.ucsb.edu/rt')
-    check_rt_reply(reply, db$rt_ticket[i])
+    reply <- check_rt_reply(db$rt_ticket[i], email_text)
     
     db$contact_initial[i] <- as.character(Sys.Date())
   }
@@ -105,11 +99,8 @@ send_annual_report_correspondence <- function(awards_db) {
     email_text <- sprintf(template,
                           db$pi_first_name[i])
     
-    reply <- rt::rt_ticket_history_reply(ticket_id = db$rt_ticket[i],
-                                         text = email_text,
-                                         rt_base = 'https://support.nceas.ucsb.edu/rt')
-    check_rt_reply(reply, db$rt_ticket[i])
-    
+    reply <- check_rt_reply(db$rt_ticket[i], email_text)
+
     # Update last contact date
     db$contact_annual_report_previous[i] <- db$contact_annual_report_next[i]
   }
@@ -135,10 +126,7 @@ send_aon_correspondence <- function(awards_db){
     email_text <- sprintf(template,
                           db$pi_first_name[i])
     
-    reply <- rt::rt_ticket_history_reply(ticket_id = db$rt_ticket[i],
-                                         text = email_text,
-                                         rt_base = 'https://support.nceas.ucsb.edu/rt')
-    check_rt_reply(reply, db$rt_ticket[i])
+    reply <- check_rt_reply(db$rt_ticket[i], email_text)
     
     # Update last contact date
     db$contact_aon_previous[i] <- db$contact_aon_next[i]
@@ -163,10 +151,7 @@ send_one_month_remaining_correspondence <- function(awards_db) {
                           db$id[i],
                           db$title[i])
     
-    reply <- rt::rt_ticket_history_reply(ticket_id = db$rt_ticket[i],
-                                         text = email_text,
-                                         rt_base = 'https://support.nceas.ucsb.edu/rt')
-    check_rt_reply(reply, db$rt_ticket[i])
+    reply <- check_rt_reply(db$rt_ticket[i], email_text)
     
     # Update last contact date
     db$contact_1mo[i] <- as.character(Sys.Date())
@@ -207,24 +192,23 @@ send_correspondence_at_time_x <- function(awards_db,
   
 }
 
+check_rt_reply <- function(ticket_number, email) {	
+  tryCatch({
+    ticket <- rt::rt_ticket_history_reply(ticket_id = ticket_number,
+                                text = email,
+                                rt_base = 'https://support.nceas.ucsb.edu/rt')
+  },
+  error = function(e) { 
+    out <- sprintf('I failed to reply on: %s', ticket)	
+    slackr::slackr_bot(out)
+  })
   
-## helper function to check RT replies
-check_rt_reply <- function(reply, rt_ticket_number) {
-  if (reply$status_code != 200) {
-    out <- sprintf('I failed to reply on: %s, with status code: %s', rt_ticket_number, reply$status_code)
-    slackr::slackr_bot(out)
-  }
-  content <- httr::content(reply)
-  if (!grepl('Correspondence added', content)) {
-    out <- paste0('I failed to send a correspondence on ticket: ', rt_ticket_number)
-    slackr::slackr_bot(out)
-  }
+  return(ticket)
 } 
-
 
 ## helper function to read in email templates
 read_file <- function(path) {
-  suppressWarnings(paste0(readLines(path), collapse = '\n'))
+  suppressWarnings(paste0(readLines(path), collapse = '\n '))
 }
 
 ## helper function read in general, AON, or SS initial template
