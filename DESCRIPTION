@@ -10,16 +10,18 @@ Authors@R: c(
 Maintainer: Dominic Mullen <dmullen17@gmail.com>
 Description: Creates an NSF awards database for the Arctic Data Center. Sends periodic correspondence to awardees.
 License: Apache License (== 2.0)
+Depends:
+    R (>= 4.0.2)
 Imports:
-  dplyr,
-  httr,
-  lubridate,
-  magrittr,
-  RCurl,
-  rt,
-  slackr,
-  stringr,
-  XML
+  dplyr (>= 1.0.2),
+  httr (>= 1.4.2),
+  lubridate (>= 1.7.9),
+  magrittr (>= 2.0.1),
+  RCurl (>= 1.98-1.2),
+  rt (>= 1.0.1),
+  slackr (>= 2.0.1),
+  stringr (>=1.4.0),
+  XML (>= 3.99-0.5)
 Suggests: 
   testthat
 Remotes: 
