@@ -2,7 +2,6 @@
 dist: bionic
 language: r
 r:
-  - 4.0.2 #what is on the linux machine right now
   - release #latest minor release
   - devel #from R git mirror of R SVN trunk
 sudo: false
