@@ -19,7 +19,7 @@ Imports:
   magrittr (>= 2.0.1),
   RCurl (>= 1.98-1.2),
   rt (>= 1.0.1),
-  slackr (== 1.4.2),
+  slackr (>= 1.4.2),
   stringr (>= 1.4.0),
   XML (>= 3.99-0.5)
 Suggests: 
