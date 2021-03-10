@@ -11,7 +11,7 @@ Maintainer: Dominic Mullen <dmullen17@gmail.com>
 Description: Creates an NSF awards database for the Arctic Data Center. Sends periodic correspondence to awardees.
 License: Apache License (== 2.0)
 Depends:
-    R (>= 4.0.2)
+    R (>= 4.0.0)
 Imports:
   dplyr (>= 1.0.2),
   httr (>= 1.4.2),
