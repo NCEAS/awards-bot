@@ -1,4 +1,17 @@
 ## TODO add a slack message that details every email sent per day?
+#' main function
+#'
+#' @param database_path (character) Path to the database of awards and correspondences
+#' @param lastrun_path (character) Determines where the bot stores its state
+#' @param current_date (date) today's date
+#' @param annual_report_time (numeric) time in months after 'start_date' to send the first annual report reminder
+#' @param initial_aon_offset (numeric)Number of months after award startDate to send first AON data due reminder
+#' @param aon_recurring_interval (numeric) Number of months to send recurring emails for AON data due
+#'
+#' @return
+#' @export
+#'
+#' @examples
 main <- function(database_path = Sys.getenv('DATABASE_PATH'),
                  lastrun_path = Sys.getenv('LASTRUN_PATH'),
                  current_date = as.character(Sys.Date()),
@@ -29,7 +42,23 @@ main <- function(database_path = Sys.getenv('DATABASE_PATH'),
   return(invisible())
 }
 
-# Wrapper for main, with additional email testing argument. 
+# 
+#' Test main function
+#' Wrapper for main, with additional email testing argument. 
+#' Uses a dummy database that will send out 2 tickets using the email specified
+#'
+#' @param database_path (character) Path to the database of awards and correspondences
+#' @param lastrun_path (character) Determines where the bot stores its state
+#' @param current_date (date) today's date
+#' @param annual_report_time (numeric) time in months after 'start_date' to send the first annual report reminder
+#' @param initial_aon_offset (numeric)Number of months after award startDate to send first AON data due reminder
+#' @param aon_recurring_interval (numeric) Number of months to send recurring emails for AON data due
+#' @param email The email to send the tickets to
+#'
+#' @return
+#' @export
+#'
+#' @examples
 test_main <- function(database_path = Sys.getenv('DATABASE_PATH'),
                       lastrun_path = Sys.getenv('LASTRUN_PATH'),
                       current_date = as.character(Sys.Date()),
