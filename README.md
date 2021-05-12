@@ -16,6 +16,7 @@ Every 24 hours the bot queries NSF's award [API](https://www.research.gov/common
   DATABASE_PATH                            # Path to the database of awards and correspondences
   LASTRUN_PATH=LASTRUN                     # Determines where the bot stores its state
   SLACK_WEBHOOK_URL="{URL}"                # Your Slack webhook URL
+  SLACK_OAUTH_TOKEN="TOKEN"                # Slack OAUTH token (see your bot admin for access)
   RT_URL="https://example.com/rt"          # The URL of your RT install
   RT_USER="your_rt_user"                   # Your RT username
   RT_PASS="your_rt_password"               # Your RT password
@@ -58,12 +59,13 @@ Please follow this closely so no emails are sent to researchers by mistake while
 1. Add the following lines to the `.Renviron` (can be accessed by `usethis::edit_r_environ()`)
 ```
   SLACK_WEBHOOK_URL="{URL}"                # Your Slack webhook URL
+  SLACK_OAUTH_TOKEN="TOKEN"
   RT_URL="https://example.com/rt"          # The URL of your RT install
   RT_USER="your_rt_user"                   # Your RT username
   RT_PASS="your_rt_password"               # Your RT password
 ```
 
-2. Set up slackbot: `slackr::slackr_setup(channel = "#awardbot",incoming_webhook_url = Sys.getenv("SLACK_WEBHOOK_URL"), cacheChannels = F)`
+2. Set up slackbot: `slackr::slackr_setup(channel = "#awardbot", username = 'awardbot', incoming_webhook_url = Sys.getenv("SLACK_WEBHOOK_URL"), bot_user_oauth_token = Sys.getenv("SLACK_OAUTH_TOKEN"))`
 
 3. Login to RT: `rt::rt_login()`
 
