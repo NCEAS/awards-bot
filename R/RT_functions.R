@@ -5,6 +5,7 @@
 #' 'send_one_month_remaining_correspondence'
 #' 
 #' @param awards_db (data.frame) awards database
+#' @param database_path (character) the path to save the database to
 #' 
 #' @importFrom magrittr '%>%' 
 send_correspondences <- function(awards_db, database_path) {
@@ -55,6 +56,7 @@ create_ticket <- function(award, requestor) {
 #' pi_email, pi_first_name, id (NSF award #), title (NSF award title).  
 #'
 #' @param awards_db (data.frame) database of NSF awards pulled from NSF-API
+#' @param database_path (character) the path to save the database to
 #'
 #' @return awards_db (data.frame) The initial database with updated RT ticket numbers
 create_ticket_and_send_initial_correspondence <- function(awards_db, database_path) {
