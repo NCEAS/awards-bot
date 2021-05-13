@@ -4,10 +4,12 @@
 \alias{send_correspondences}
 \title{Wrapper function that sends all correspondences}
 \usage{
-send_correspondences(awards_db)
+send_correspondences(awards_db, database_path)
 }
 \arguments{
 \item{awards_db}{(data.frame) awards database}
+
+\item{database_path}{(character) the path to save the database to}
 }
 \description{
 Wrapper function for 'create_ticket_and_send_initial_correspondence',

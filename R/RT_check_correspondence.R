@@ -1,12 +1,12 @@
 #' Get recent incoming correspondence formatted
 #'
-#' @param ticket_id
-#' @param after
+#' @param ticket_id (character) the RT ticket number
+#' @param after (character) check all the correspondences sent after this date
 #'
 #' @return list of correspondences per ticket to send
 #' @export
 #'
-#' @examples get_recent_incoming_correspondence("21866", "2021-05-03")
+#' @examples
 get_recent_incoming_correspondence <- function(ticket_id, after) {
   correspondences <- list()
 
@@ -109,7 +109,7 @@ format_history_entry <- function(msg, trunc_at = 200) {
 #' @return
 #' @export
 #'
-#' @examples get_tickets_with_new_incoming_correspondence("2021-05-03")
+#' @examples 
 get_tickets_with_new_incoming_correspondence <- function(after) {
   #   # RT search uses local time whereas the API uses UTC. Go figure.
   #   after_localtime = after.astimezone(pytz.timezone('America/Los_Angeles'))
