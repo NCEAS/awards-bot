@@ -18,7 +18,7 @@ get_recent_incoming_correspondence <- function(ticket_id, after) {
 
   # look for all instances with an email
   ticket_history <- unlist(strsplit(req$body, "\\n"))
-  incoming <- ticket_history[grep("Correspondence added by [_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,4})", ticket_history)]
+  incoming <- ticket_history[stringr::str_detect(ticket_history, "Correspondence added by .+@.+")]
 
   if (length(incoming) == 0) {
     return(correspondences)
@@ -27,7 +27,7 @@ get_recent_incoming_correspondence <- function(ticket_id, after) {
   for (inc in incoming) {
 
     # get the specific correspondence
-    id <- regmatches(inc, regexpr("[0-9]*", inc))
+    id <- stringr::str_extract(inc, "[0-9]*")
     
     response <- rt::rt_ticket_history_entry(ticket_id, id)
 
