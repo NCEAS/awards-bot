@@ -30,18 +30,4 @@ test_that('we can get a correspondence for a ticket', {
   
 })
 
-test_that('we can parse a correspondence', {
-  if (!check_rt_login(rt_url)) {
-    skip('Not logged in to RT. Skipping Test.')
-  }
-  
-  url <- rt:::rt_url("ticket", "21866", "history/id", "520747")
-  response <- rt:::rt_GET(url)
-  rt:::stopforstatus(response)
-  
-  transaction <- parse_rt_transaction(response$body)
-  
-  expect_equal(transaction$Created,"2021-05-05 00:30:15")
-})
-
 

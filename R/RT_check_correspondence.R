@@ -28,54 +28,18 @@ get_recent_incoming_correspondence <- function(ticket_id, after) {
 
     # get the specific correspondence
     id <- regmatches(inc, regexpr("[0-9]*", inc))
-
-    url <- rt:::rt_url("ticket", ticket_id, "history/id", id)
-    response <- rt:::rt_GET(url)
-    rt:::stopforstatus(response)
-
-    transaction <- parse_rt_transaction(response$body)
+    
+    response <- rt::rt_ticket_history_entry(ticket_id, id)
 
     # !!! check if this works
-    if (transaction$Created <= after) {
+    if (response$Created <= after) {
       next
     }
 
-    correspondences <- append(correspondences, format_history_entry(transaction))
+    correspondences <- append(correspondences, format_history_entry(response))
   }
 
   return(correspondences)
-}
-
-parse_rt_transaction <- function(transaction) {
-  lines <- unlist(strsplit(transaction, "\\n"))
-  msg <- list()
-
-  for (i in 1:length(lines)) {
-    line <- lines[i]
-
-    if (startsWith(line, "id: ")) {
-      msg["id"] <- strsplit(line, ": ")[[1]][2]
-    } else if (startsWith(line, "Ticket: ")) {
-      msg["Ticket"] <- strsplit(line, ": ")[[1]][2]
-    } else if (startsWith(line, "Creator: ")) {
-      msg["Creator"] <- strsplit(line, ": ")[[1]][2]
-    } else if (startsWith(line, "Created: ")) {
-      msg["Created"] <- strsplit(line, ": ")[[1]][2]
-    } else if (startsWith(line, "Type: ")) {
-      msg["Type"] <- strsplit(line, ": ")[[1]][2]
-    } else if (startsWith(line, "Content: ")) {
-      content_lines <- c()
-      i <- i + 1
-
-      while (!grepl("[a-z]: ", lines[i])) {
-        content_lines <- c(content_lines, trimws(lines[i]))
-        i <- i + 1
-      }
-
-      msg["Content"] <- paste(content_lines, collapse = " ")
-    }
-  }
-  return(msg)
 }
 
 format_history_entry <- function(msg, trunc_at = 200) {
