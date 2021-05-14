@@ -11,6 +11,8 @@ test_that('we can get all the correspondences for all the tickets', {
   tickets <- get_tickets_with_new_incoming_correspondence("2021-05-03")
   expect_equal(length(tickets), 20)
   
+  tic <- get_tickets_with_new_incoming_correspondence("2021-05-06")
+  
   ticket_none <- get_tickets_with_new_incoming_correspondence("2021-05-11")
   expect_null(ticket_none)
 
