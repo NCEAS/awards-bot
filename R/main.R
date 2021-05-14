@@ -1,4 +1,3 @@
-## TODO add a slack message that details every email sent per day?
 #' main function
 #'
 #' @param database_path (character) Path to the database of awards and correspondences
