@@ -24,7 +24,8 @@ test_that('we can send an initial correspondence', {
   }
   
   db <- create_dummy_database()
-  db <- create_ticket_and_send_initial_correspondence(db)
+
+  db <- create_ticket_and_send_initial_correspondence(db, database_path = "inst/test_db.csv")
   
   ticket <- rt::rt_ticket_properties(db$rt_ticket)
   expect_equal(ticket$Requestors, 'jasminelai@nceas.ucsb.edu')
@@ -36,9 +37,9 @@ test_that('we can send an annual report correspondence', {
   }
   
   db <- create_dummy_database()
-  db <- create_ticket_and_send_initial_correspondence(db)
+  db <- create_ticket_and_send_initial_correspondence(db, database_path = "inst/test_db.csv")
   db$contact_annual_report_next <- as.character(Sys.Date())
-  db <- send_annual_report_correspondence(db)
+  db <- send_annual_report_correspondence(db, database_path = "inst/test_db.csv")
   
   expect_equal(db$contact_annual_report_next, db$contact_annual_report_previous)
 })
@@ -49,10 +50,10 @@ test_that('we can send a one month remaining correspondence',{
   }
   
   db <- create_dummy_database()
-  db <- create_ticket_and_send_initial_correspondence(db)
+  db <- create_ticket_and_send_initial_correspondence(db, database_path = "inst/test_db.csv")
   # Set expiration date to one month from now
   db$contact_1mo <- as.character(Sys.Date())
-  db <- send_one_month_remaining_correspondence(db)
+  db <- send_one_month_remaining_correspondence(db, database_path = "inst/test_db.csv")
   
   expect_equal(db$contact_1mo, as.character(Sys.Date()))
 })
@@ -63,9 +64,9 @@ test_that('we can send an aon correspondence', {
   }
   
   db <- create_dummy_database()
-  db <- create_ticket_and_send_initial_correspondence(db)
+  db <- create_ticket_and_send_initial_correspondence(db, database_path = "inst/test_db.csv")
   db$contact_aon_next <- as.character(Sys.Date())
-  db <- send_aon_correspondence(db)
+  db <- send_aon_correspondence(db, database_path = "inst/test_db.csv")
   
   expect_equal(db$contact_aon_previous, db$contact_aon_next)
 })
@@ -80,7 +81,7 @@ test_that('check_rt_reply catches both potential errors', {
   }
   
   db <- create_dummy_database()
-  db <- create_ticket_and_send_initial_correspondence(db)
+  db <- create_ticket_and_send_initial_correspondence(db, database_path = "inst/test_db.csv")
   
   template <- read_initial_template(db$fund_program_name[1])
   email_text <- sprintf(template,

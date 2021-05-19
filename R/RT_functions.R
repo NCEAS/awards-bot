@@ -5,18 +5,25 @@
 #' 'send_one_month_remaining_correspondence'
 #' 
 #' @param awards_db (data.frame) awards database
+#' @param database_path (character) the path to save the database to
 #' 
 #' @importFrom magrittr '%>%' 
-send_correspondences <- function(awards_db) {
+send_correspondences <- function(awards_db, database_path) {
   indices <- which(awards_db$active_award_flag == 'yes') 
   db <- awards_db[indices,]
   
-  db <- create_ticket_and_send_initial_correspondence(db) %>%
-    send_annual_report_correspondence() %>%
-    send_aon_correspondence() %>%
-    send_one_month_remaining_correspondence() 
+  db <- create_ticket_and_send_initial_correspondence(db, database_path) %>%
+    send_annual_report_correspondence(., database_path) %>%
+    send_aon_correspondence(., database_path) %>%
+    send_one_month_remaining_correspondence(., database_path) 
   
   awards_db[indices,] <- db
+  
+  #send summary of tickets sent
+  if(nrow(awards_db[indices,]) > 0) {
+    out <- sprintf('I sent %s tickets today', nrow(awards_db[indices,]))	
+    slackr::slackr_bot(out)	
+  }
   
   return(awards_db)
 }
@@ -55,9 +62,10 @@ create_ticket <- function(award, requestor) {
 #' pi_email, pi_first_name, id (NSF award #), title (NSF award title).  
 #'
 #' @param awards_db (data.frame) database of NSF awards pulled from NSF-API
+#' @param database_path (character) the path to save the database to
 #'
 #' @return awards_db (data.frame) The initial database with updated RT ticket numbers
-create_ticket_and_send_initial_correspondence <- function(awards_db) {
+create_ticket_and_send_initial_correspondence <- function(awards_db, database_path) {
   # Get awards without an initial correspondence
   indices <- which(is.na(awards_db$contact_initial)) # save indices to re-merge
   db <- awards_db[indices,]
@@ -65,6 +73,7 @@ create_ticket_and_send_initial_correspondence <- function(awards_db) {
   for (i in seq_len(nrow(db))) {
     # Create RT ticket
     db$rt_ticket[i] <- create_ticket(db$id[i], db$pi_email[i])
+    
     if (db$rt_ticket[i] == 'rt_ticket_create_error') {
       next 
     }
@@ -78,16 +87,18 @@ create_ticket_and_send_initial_correspondence <- function(awards_db) {
     reply <- check_rt_reply(db$rt_ticket[i], email_text)
     
     db$contact_initial[i] <- as.character(Sys.Date())
+    
+    # re-merge temporary database into permanent
+    awards_db[i,] <- db[i,]
+    #save the result inbetween
+    utils::write.csv(db, file = database_path, row.names = FALSE)
   }
-  
-  # re-merge temporary database into permanent
-  awards_db[indices,] <- db
   
   return(awards_db)
 }
 
 
-send_annual_report_correspondence <- function(awards_db) {
+send_annual_report_correspondence <- function(awards_db, database_path) {
   # Get awards to send annual report correspondence 
   current_date <- as.character(Sys.Date())
   indices <- which(awards_db$contact_annual_report_next == current_date) # save indices to re-merge
@@ -103,19 +114,22 @@ send_annual_report_correspondence <- function(awards_db) {
 
     # Update last contact date
     db$contact_annual_report_previous[i] <- db$contact_annual_report_next[i]
+    
+    # re-merge temporary database into permanent
+    awards_db[i,] <- db[i, ]
+    #save the result inbetween
+    utils::write.csv(db, file = database_path, row.names = FALSE)
   }
-  
-  # re-merge temporary database into permanent
-  awards_db[indices,] <- db
   
   ## TODO
   # add function that updates annual report correspondence times
+  
   
   return(awards_db)
 }
 
 
-send_aon_correspondence <- function(awards_db){
+send_aon_correspondence <- function(awards_db, database_path){
   current_date <- as.character(Sys.Date())
   indices <- which(awards_db$contact_aon_next == current_date)
   db <- awards_db[indices,]
@@ -130,16 +144,18 @@ send_aon_correspondence <- function(awards_db){
     
     # Update last contact date
     db$contact_aon_previous[i] <- db$contact_aon_next[i]
+    
+    # re-merge temporary database into permanent
+    awards_db[i,] <- db[i, ]
+    #save the result inbetween
+    utils::write.csv(db, file = database_path, row.names = FALSE)
   }
-  
-  # re-merge temporary database into permanent
-  awards_db[indices,] <- db
   
   return(awards_db)
 }
 
   
-send_one_month_remaining_correspondence <- function(awards_db) {
+send_one_month_remaining_correspondence <- function(awards_db, database_path) {
   indices <- which(awards_db$contact_1mo == as.character(Sys.Date()))
   db <- awards_db[indices,]
   
@@ -155,10 +171,12 @@ send_one_month_remaining_correspondence <- function(awards_db) {
     
     # Update last contact date
     db$contact_1mo[i] <- as.character(Sys.Date())
+    
+    # re-merge temporary database into permanent
+    awards_db[i,] <- db[i, ]
+    #save the result inbetween
+    utils::write.csv(db, file = database_path, row.names = FALSE)
   }
-  
-  # re-merge temporary database into permanent
-  awards_db[indices,] <- db
 
   return(awards_db)
 }

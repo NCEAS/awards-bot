@@ -4,10 +4,12 @@
 \alias{create_ticket_and_send_initial_correspondence}
 \title{Create New Tickets and send initial correspondences}
 \usage{
-create_ticket_and_send_initial_correspondence(awards_db)
+create_ticket_and_send_initial_correspondence(awards_db, database_path)
 }
 \arguments{
 \item{awards_db}{(data.frame) database of NSF awards pulled from NSF-API}
+
+\item{database_path}{(character) the path to save the database to}
 }
 \value{
 awards_db (data.frame) The initial database with updated RT ticket numbers

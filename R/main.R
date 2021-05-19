@@ -1,4 +1,3 @@
-## TODO add a slack message that details every email sent per day?
 #' main function
 #'
 #' @param database_path (character) Path to the database of awards and correspondences
@@ -33,11 +32,10 @@ main <- function(database_path = Sys.getenv('DATABASE_PATH'),
   db <- update_contact_dates(db, annual_report_time, initial_aon_offset, aon_recurring_interval) 
   
   ## Send correspondences 
-  db <- send_correspondences(db)
+  send_correspondences(db, database_path)
   
   ## Save lastrun and database 
   save_lastrun(current_date, lastrun_path)
-  utils::write.csv(db, file = database_path, row.names = FALSE)
   
   return(invisible())
 }
