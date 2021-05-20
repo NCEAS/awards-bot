@@ -18,10 +18,16 @@ library(awardsBot)
 # Log in to RT/SLACK
 rt::rt_login(Sys.getenv("RT_USER"), Sys.getenv("RT_PASS"), Sys.getenv("RT_URL"))
 
-slackr::slackr_setup(
-  channel = "#awardbot", username = "awardbot",
-  incoming_webhook_url = Sys.getenv("SLACK_WEBHOOK_URL"),
-  bot_user_oauth_token = Sys.getenv("SLACK_OAUTH_TOKEN")
-)
-
+slackr::slackr_setup(channel = "#awardbot", username = 'awardbot',
+                     incoming_webhook_url = Sys.getenv("SLACK_WEBHOOK_URL"),
+                     bot_user_oauth_token = Sys.getenv("SLACK_OAUTH_TOKEN"))
+#check awards
 awardsBot::main()
+
+#check for new correspondences
+tickets <- get_tickets_with_new_incoming_correspondence(Sys.Date())
+
+for(ticket in tickets){
+  for(corr in ticket){
+    slackr::slackr_bot(corr)
+
