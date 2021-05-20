@@ -25,7 +25,7 @@ slackr::slackr_setup(channel = "#awardbot", username = 'awardbot',
 awardsBot::main()
 
 #check for new correspondences
-tickets <- get_tickets_with_new_incoming_correspondence(Sys.Date())
+tickets <- awardsBot::get_tickets_with_new_incoming_correspondence(Sys.Date())
 
 for(ticket in tickets){
   for(corr in ticket){
