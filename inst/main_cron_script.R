@@ -30,4 +30,5 @@ tickets <- get_tickets_with_new_incoming_correspondence(Sys.Date())
 for(ticket in tickets){
   for(corr in ticket){
     slackr::slackr_bot(corr)
-
+  }
+}
