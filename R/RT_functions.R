@@ -19,6 +19,12 @@ send_correspondences <- function(awards_db, database_path) {
   
   awards_db[indices,] <- db
   
+  #send summary of tickets sent
+  if(nrow(awards_db[indices,]) > 0) {
+    out <- sprintf('I sent %s tickets today', nrow(awards_db[indices,]))	
+    slackr::slackr_bot(out)	
+  }
+  
   return(awards_db)
 }
 

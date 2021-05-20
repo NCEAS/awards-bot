@@ -1,9 +1,8 @@
-## TODO add a slack message that details every email sent per day?
 #' main function
 #'
 #' @param database_path (character) Path to the database of awards and correspondences
 #' @param lastrun_path (character) Determines where the bot stores its state
-#' @param current_date (date) today's date
+#' @param current_date (character) today's date
 #' @param annual_report_time (numeric) time in months after 'start_date' to send the first annual report reminder
 #' @param initial_aon_offset (numeric)Number of months after award startDate to send first AON data due reminder
 #' @param aon_recurring_interval (numeric) Number of months to send recurring emails for AON data due
@@ -48,7 +47,7 @@ main <- function(database_path = Sys.getenv('DATABASE_PATH'),
 #'
 #' @param database_path (character) Path to the database of awards and correspondences
 #' @param lastrun_path (character) Determines where the bot stores its state
-#' @param current_date (date) today's date
+#' @param current_date (character) today's date
 #' @param annual_report_time (numeric) time in months after 'start_date' to send the first annual report reminder
 #' @param initial_aon_offset (numeric)Number of months after award startDate to send first AON data due reminder
 #' @param aon_recurring_interval (numeric) Number of months to send recurring emails for AON data due
