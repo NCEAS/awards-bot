@@ -3,17 +3,22 @@
 \name{get_tickets_with_new_incoming_correspondence}
 \alias{get_tickets_with_new_incoming_correspondence}
 \title{Get incoming correspondences
-modified from the submissions bot python code}
+modified from the submissions-bot python code}
 \usage{
 get_tickets_with_new_incoming_correspondence(after)
 }
 \arguments{
-\item{after}{date YYYY-MM-DD}
+\item{after}{(character) date YYYY-MM-DD}
 }
 \value{
-
+list of correspondences
 }
 \description{
 Get incoming correspondences
-modified from the submissions bot python code
+modified from the submissions-bot python code
+}
+\examples{
+\dontrun{
+get_tickets_with_new_incoming_correspondence("2021-05-03")
+}
 }

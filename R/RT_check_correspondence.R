@@ -7,13 +7,18 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' get_recent_incoming_correspondence("21866", "2021-05-03")
+#' }
 get_recent_incoming_correspondence <- function(ticket_id, after) {
   correspondences <- list()
 
   req <- rt::rt_ticket_history(ticket_id, format = "s")
 
   if (req$status != 200) {
-    stop("Failed to log into RT")
+    out <- "Failed to log into RT"
+    slackr::slackr_bot(out)
+    stop(out)
   }
 
   # look for all instances with an email
@@ -50,12 +55,11 @@ get_recent_incoming_correspondence <- function(ticket_id, after) {
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' response <- rt::rt_ticket_history_entry("21866", "520747")
+#' format_history_entry(response)
+#' }
 format_history_entry <- function(msg, trunc_at = 200) {
-  if (nchar(msg["Content"]) > trunc_at) {
-    ellipsis <- "..."
-  } else {
-    ellipsis <- ""
-  }
 
   if (msg["Type"] == "Correspond") {
     msg["Type"] <- "Correspondence"
@@ -65,11 +69,10 @@ format_history_entry <- function(msg, trunc_at = 200) {
 
   # construct the slack message
   sprintf(
-    "%s by %s on <%s/Ticket/Display.html?id=%s|Ticket %s>:\n>%s%s",
+    "%s by %s on <%s/Ticket/Display.html?id=%s|Ticket %s>:\n>%s",
     msg$Type, msg$Creator, Sys.getenv("RT_BASE_URL"),
     msg$Ticket, msg$Ticket,
-    strtrim(msg$Content, trunc_at),
-    ellipsis
+    stringr::str_trunc(stringr::str_remove_all(msg$Content, "\\n\\s+"), trunc_at)
   )
 }
 
@@ -78,10 +81,13 @@ format_history_entry <- function(msg, trunc_at = 200) {
 #'
 #' @param after (character) date YYYY-MM-DD
 #'
-#' @return
+#' @return list of correspondences
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' get_tickets_with_new_incoming_correspondence("2021-05-03")
+#' }
 get_tickets_with_new_incoming_correspondence <- function(after) {
   tickets <- rt::rt_ticket_search(paste0("Queue='arcticAwards' AND LastUpdated >'", after, " 00:00:00'"))
 

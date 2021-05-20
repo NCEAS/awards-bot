@@ -2,7 +2,7 @@
 % Please edit documentation in R/RT_check_correspondence.R
 \name{get_recent_incoming_correspondence}
 \alias{get_recent_incoming_correspondence}
-\title{Get recent incoming correspondence formatted}
+\title{Get recent incoming correspondence}
 \usage{
 get_recent_incoming_correspondence(ticket_id, after)
 }
@@ -15,5 +15,10 @@ get_recent_incoming_correspondence(ticket_id, after)
 list of correspondences per ticket to send
 }
 \description{
-Get recent incoming correspondence formatted
+Get recent incoming correspondence
+}
+\examples{
+\dontrun{
+get_recent_incoming_correspondence("21866", "2021-05-03")
+}
 }
