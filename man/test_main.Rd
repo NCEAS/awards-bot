@@ -21,7 +21,7 @@ test_main(
 
 \item{lastrun_path}{(character) Determines where the bot stores its state}
 
-\item{current_date}{(date) today's date}
+\item{current_date}{(character) today's date}
 
 \item{annual_report_time}{(numeric) time in months after 'start_date' to send the first annual report reminder}
 
