@@ -8,11 +8,13 @@ library(slackr)
 library(stringr)
 library(XML)
 
+setwd("~/awards-bot")
+
 ## Set up environment variables
 readRenviron(file.path(getwd(), ".Renviron"))
 
 ## Source the bot
-remotes::install_github("NCEAS/awards-bot")
+#remotes::install_github("NCEAS/awards-bot")
 library(awardsBot)
 
 # Log in to RT/SLACK
