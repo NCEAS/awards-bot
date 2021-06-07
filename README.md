@@ -17,9 +17,9 @@ Every 24 hours the bot queries NSF's award [API](https://www.research.gov/common
   LASTRUN_PATH=LASTRUN                     # Determines where the bot stores its state
   SLACK_WEBHOOK_URL="{URL}"                # Your Slack webhook URL
   SLACK_OAUTH_TOKEN="TOKEN"                # Slack OAUTH token (see your bot admin for access)
-  RT_URL="https://example.com/rt"          # The URL of your RT install
+  RT_BASE_URL="https://example.com/rt"          # The URL of your RT install
   RT_USER="your_rt_user"                   # Your RT username
-  RT_PASS="your_rt_password"               # Your RT password
+  RT_PASSWORD="your_rt_password"               # Your RT password
   INITIAL_ANNUAL_REPORT_OFFSET=8           # Number of months after award startDate to send annaul report reminder
   INITIAL_AON_OFFSET=11                    # Number of months after award startDate to send first AON data due reminder
   AON_RECURRING_INTERVAL=6                 # Number of months to send recurring emails for AON data due
@@ -60,9 +60,9 @@ Please follow this closely so no emails are sent to researchers by mistake while
 ```
   SLACK_WEBHOOK_URL="{URL}"                # Your Slack webhook URL
   SLACK_OAUTH_TOKEN="TOKEN"
-  RT_URL="https://example.com/rt"          # The URL of your RT install
+  RT_BASE_URL="https://example.com/rt"          # The URL of your RT install
   RT_USER="your_rt_user"                   # Your RT username
-  RT_PASS="your_rt_password"               # Your RT password
+  RT_PASSWORD="your_rt_password"               # Your RT password
 ```
 
 2. Set up slackbot: `slackr::slackr_setup(channel = "#awardbot", username = 'awardbot', incoming_webhook_url = Sys.getenv("SLACK_WEBHOOK_URL"), bot_user_oauth_token = Sys.getenv("SLACK_OAUTH_TOKEN"))`
