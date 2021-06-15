@@ -1,4 +1,6 @@
-# awardsBot <img src="man/figures/logo.png" align="right" width="129px" height="150px"/>
+# awardsBot <img src="man/figures/logo.png" align="right" width="129px" height="150px"/> 
+[![R build status](https://github.com/NCEAS/awards-bot/workflows/R-CMD-check/badge.svg)](https://github.com/NCEAS/awards-bot/actions)
+<!-- badges: end -->
 
 [![Build Status](https://travis-ci.org/NCEAS/awards-bot.svg?branch=master)](https://travis-ci.org/NCEAS/awards-bot) 
 
