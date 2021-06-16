@@ -1,6 +1,6 @@
 Package: awardsBot
 Type: Package
-Title: Periodic correspondence bot for NSF award recipients
+Title: Periodic Correspondence Bot for NSF Award Recipients
 Version: 1.0
 Date: 2018-06-18
 Authors@R: c(
