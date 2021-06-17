@@ -1,8 +1,5 @@
 # awardsBot <img src="man/figures/logo.png" align="right" width="129px" height="150px"/> 
 [![R build status](https://github.com/NCEAS/awards-bot/workflows/R-CMD-check/badge.svg)](https://github.com/NCEAS/awards-bot/actions)
-<!-- badges: end -->
-
-[![Build Status](https://travis-ci.org/NCEAS/awards-bot.svg?branch=master)](https://travis-ci.org/NCEAS/awards-bot) 
 
 The NSF awards bot regularly contacts principal investigators with reminders on their project specific deadlines.  Please read the [schedule readme](https://github.com/NCEAS/awards-bot/tree/master/inst/emails) for more detailed information on automated correspondences.
 
