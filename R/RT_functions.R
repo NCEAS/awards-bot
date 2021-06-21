@@ -9,15 +9,11 @@
 #' 
 #' @importFrom magrittr '%>%' 
 send_correspondences <- function(awards_db, database_path) {
-  indices <- which(awards_db$active_award_flag == 'yes') 
-  db <- awards_db[indices,]
   
-  db <- create_ticket_and_send_initial_correspondence(db, database_path) %>%
+  awards_db <- create_ticket_and_send_initial_correspondence(awards_db, database_path) %>%
     send_annual_report_correspondence(., database_path) %>%
     send_aon_correspondence(., database_path) %>%
     send_one_month_remaining_correspondence(., database_path) 
-  
-  awards_db[indices,] <- db
   
   return(awards_db)
 }
@@ -61,7 +57,7 @@ create_ticket <- function(award, requestor) {
 #' @return awards_db (data.frame) The initial database with updated RT ticket numbers
 create_ticket_and_send_initial_correspondence <- function(awards_db, database_path) {
   # Get awards without an initial correspondence
-  indices <- which(is.na(awards_db$contact_initial)) # save indices to re-merge
+  indices <- which(is.na(awards_db$contact_initial) & awards_db$active_award_flag == 'yes') # save indices to re-merge
   db <- awards_db[indices,]
   
   for (i in seq_len(nrow(db))) {
@@ -101,7 +97,7 @@ create_ticket_and_send_initial_correspondence <- function(awards_db, database_pa
 send_annual_report_correspondence <- function(awards_db, database_path) {
   # Get awards to send annual report correspondence 
   current_date <- as.character(Sys.Date())
-  indices <- which(awards_db$contact_annual_report_next == current_date) # save indices to re-merge
+  indices <- which(awards_db$contact_annual_report_next == current_date & awards_db$active_award_flag == 'yes') # save indices to re-merge
   db <- awards_db[indices,]
   
   for (i in seq_len(nrow(db))) {
@@ -137,7 +133,7 @@ send_annual_report_correspondence <- function(awards_db, database_path) {
 
 send_aon_correspondence <- function(awards_db, database_path){
   current_date <- as.character(Sys.Date())
-  indices <- which(awards_db$contact_aon_next == current_date)
+  indices <- which(awards_db$contact_aon_next == current_date & awards_db$active_award_flag == 'yes')
   db <- awards_db[indices,]
   
   for (i in seq_len(nrow(db))) {
@@ -168,7 +164,7 @@ send_aon_correspondence <- function(awards_db, database_path){
 
   
 send_one_month_remaining_correspondence <- function(awards_db, database_path) {
-  indices <- which(awards_db$contact_1mo == as.character(Sys.Date()))
+  indices <- which(awards_db$contact_1mo == as.character(Sys.Date()) & awards_db$active_award_flag == 'yes')
   db <- awards_db[indices,]
   
   for (i in seq_len(nrow(db))) {
