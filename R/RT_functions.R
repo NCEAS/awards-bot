@@ -19,12 +19,6 @@ send_correspondences <- function(awards_db, database_path) {
   
   awards_db[indices,] <- db
   
-  #send summary of tickets sent
-  if(nrow(awards_db[indices,]) > 0) {
-    out <- sprintf('I sent %s tickets today', nrow(awards_db[indices,]))	
-    slackr::slackr_bot(out)	
-  }
-  
   return(awards_db)
 }
 
@@ -94,6 +88,12 @@ create_ticket_and_send_initial_correspondence <- function(awards_db, database_pa
     utils::write.csv(awards_db, file = database_path, row.names = FALSE)
   }
   
+  #send summary of tickets created
+  if(nrow(db) > 0) {
+    out <- sprintf('I created %s new tickets today', nrow(db))	
+    slackr::slackr_bot(out)	
+  }
+  
   return(awards_db)
 }
 
@@ -119,6 +119,12 @@ send_annual_report_correspondence <- function(awards_db, database_path) {
     awards_db[i,] <- db[i, ]
     #save the result inbetween
     utils::write.csv(awards_db, file = database_path, row.names = FALSE)
+  }
+  
+  #send summary of tickets created
+  if(nrow(db) > 0) {
+    out <- sprintf('I sent %s annual reminders today', nrow(db))	
+    slackr::slackr_bot(out)	
   }
   
   ## TODO
@@ -151,6 +157,12 @@ send_aon_correspondence <- function(awards_db, database_path){
     utils::write.csv(awards_db, file = database_path, row.names = FALSE)
   }
   
+  #send summary of tickets created
+  if(nrow(db) > 0) {
+    out <- sprintf('I sent %s AON emails today', nrow(db))	
+    slackr::slackr_bot(out)	
+  }
+  
   return(awards_db)
 }
 
@@ -176,6 +188,12 @@ send_one_month_remaining_correspondence <- function(awards_db, database_path) {
     awards_db[i,] <- db[i, ]
     #save the result inbetween
     utils::write.csv(awards_db, file = database_path, row.names = FALSE)
+  }
+  
+  #send summary of tickets created
+  if(nrow(db) > 0) {
+    out <- sprintf('I sent %s 1 month reminders today', nrow(db))	
+    slackr::slackr_bot(out)	
   }
 
   return(awards_db)
