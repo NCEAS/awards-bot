@@ -91,7 +91,7 @@ create_ticket_and_send_initial_correspondence <- function(awards_db, database_pa
     # re-merge temporary database into permanent
     awards_db[i,] <- db[i,]
     #save the result inbetween
-    utils::write.csv(db, file = database_path, row.names = FALSE)
+    utils::write.csv(awards_db, file = database_path, row.names = FALSE)
   }
   
   return(awards_db)
@@ -118,7 +118,7 @@ send_annual_report_correspondence <- function(awards_db, database_path) {
     # re-merge temporary database into permanent
     awards_db[i,] <- db[i, ]
     #save the result inbetween
-    utils::write.csv(db, file = database_path, row.names = FALSE)
+    utils::write.csv(awards_db, file = database_path, row.names = FALSE)
   }
   
   ## TODO
@@ -148,7 +148,7 @@ send_aon_correspondence <- function(awards_db, database_path){
     # re-merge temporary database into permanent
     awards_db[i,] <- db[i, ]
     #save the result inbetween
-    utils::write.csv(db, file = database_path, row.names = FALSE)
+    utils::write.csv(awards_db, file = database_path, row.names = FALSE)
   }
   
   return(awards_db)
@@ -175,7 +175,7 @@ send_one_month_remaining_correspondence <- function(awards_db, database_path) {
     # re-merge temporary database into permanent
     awards_db[i,] <- db[i, ]
     #save the result inbetween
-    utils::write.csv(db, file = database_path, row.names = FALSE)
+    utils::write.csv(awards_db, file = database_path, row.names = FALSE)
   }
 
   return(awards_db)
