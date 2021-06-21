@@ -86,7 +86,7 @@ create_ticket_and_send_initial_correspondence <- function(awards_db, database_pa
   
   #send summary of tickets created
   if(nrow(db) > 0) {
-    out <- sprintf('I created %s new tickets today', nrow(db))	
+    out <- sprintf('I created %s new ticket(s) today', nrow(db))	
     slackr::slackr_bot(out)	
   }
   
@@ -119,7 +119,7 @@ send_annual_report_correspondence <- function(awards_db, database_path) {
   
   #send summary of tickets created
   if(nrow(db) > 0) {
-    out <- sprintf('I sent %s annual reminders today', nrow(db))	
+    out <- sprintf('I sent %s annual reminder(s) today', nrow(db))	
     slackr::slackr_bot(out)	
   }
   
@@ -155,7 +155,7 @@ send_aon_correspondence <- function(awards_db, database_path){
   
   #send summary of tickets created
   if(nrow(db) > 0) {
-    out <- sprintf('I sent %s AON emails today', nrow(db))	
+    out <- sprintf('I sent %s AON email(s) today', nrow(db))	
     slackr::slackr_bot(out)	
   }
   
@@ -188,7 +188,7 @@ send_one_month_remaining_correspondence <- function(awards_db, database_path) {
   
   #send summary of tickets created
   if(nrow(db) > 0) {
-    out <- sprintf('I sent %s 1 month reminders today', nrow(db))	
+    out <- sprintf('I sent %s one month reminder(s) today', nrow(db))	
     slackr::slackr_bot(out)	
   }
 
