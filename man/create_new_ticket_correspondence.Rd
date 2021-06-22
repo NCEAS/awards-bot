@@ -2,9 +2,7 @@
 % Please edit documentation in R/RT_functions.R
 \name{create_new_ticket_correspondence}
 \alias{create_new_ticket_correspondence}
-\title{Generalized version of the create_ticket and send correspondence function
-For sending reminder emails or any other mass customized email correspondences. 
-Similar to a mail merge for sending mass emails to RT, will write a table out with the RT tickets}
+\title{Generalized version of the create_ticket and send correspondence function}
 \usage{
 create_new_ticket_correspondence(db, template, test = TRUE)
 }
@@ -19,9 +17,8 @@ create_new_ticket_correspondence(db, template, test = TRUE)
 dataframe
 }
 \description{
-Generalized version of the create_ticket and send correspondence function
 For sending reminder emails or any other mass customized email correspondences. 
-Similar to a mail merge for sending mass emails to RT, will write a table out with the RT tickets
+Similar to a mail merge for sending mass emails to RT.
 }
 \examples{
 \dontrun{

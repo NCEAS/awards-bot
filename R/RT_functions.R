@@ -278,12 +278,13 @@ check_rt_login <- function(rt_base) {
   }
 }
 
-#' Generalized version of the create_ticket and send correspondence function
+#' Generalized version of the create_ticket and send_correspondences function
+#' 
 #' For sending reminder emails or any other mass customized email correspondences. 
-#' Similar to a mail merge for sending mass emails to RT, will write a table out with the RT tickets
+#' Similar to a mail merge for sending mass emails to RT.
 #'
 #' @param db (dataframe) a database containing the name and email for follow up with the following column named: first_name, id, title
-#' @param template (character)
+#' @param template (character) an email template that will fill in the name and award title at each %s (see example below)
 #' @param test (logical) sends a test email (replaces all the emails with a test email address)
 #' 
 #'
