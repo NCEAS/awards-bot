@@ -277,3 +277,55 @@ check_rt_login <- function(rt_base) {
     return(TRUE)
   }
 }
+
+#' Generalized version of the create_ticket and send correspondence function
+#' For sending reminder emails or any other mass customized email correspondences. 
+#' Similar to a mail merge for sending mass emails to RT, will write a table out with the RT tickets
+#'
+#' @param db (dataframe) a database containing the name and email for follow up with the following column named: first_name, id, title
+#' @param template (character)
+#' @param test (logical) sends a test email (replaces all the emails with a test email address)
+#' 
+#'
+#' @return dataframe
+#' @export
+#'
+#' @examples 
+#' \dontrun{
+#' db <- import_awards_db(file.path(system.file('example_db.csv', package = 'awardsBot')))
+#' create_new_ticket_correspondence(db = db, 
+#'                                  "Dear %s, 
+#'                                  \n We are writing to you today about your NSF Arctic Sciences award %s %s. 
+#'                                  \n The Arctic Data Center Support Team", 
+#'                                  test = TRUE)
+#' }
+
+create_new_ticket_correspondence <- function(db, template, test = TRUE) {
+  
+  for (i in seq_len(nrow(db))) {
+
+    if(test){
+      db$rt_ticket[i] <- awardsBot:::create_ticket(db$id[i], "jasminelai@nceas.ucsb.edu")
+    } else {
+      db$rt_ticket[i] <- awardsBot:::create_ticket(db$id[i], db$pi_email[i])
+    }
+    
+    
+    if (db$rt_ticket[i] == 'rt_ticket_create_error') {
+      next 
+    }
+   
+     #Fill in correspondence text 
+    email_text <- sprintf(template,
+                          db$pi_first_name[i],
+                          db$id[i],
+                          db$title[i])
+    
+    reply <- awardsBot:::check_rt_reply(db$rt_ticket[i], email_text)
+
+    db$contact_initial[i] <- as.character(Sys.Date())
+    
+    return(db)
+
+  }
+}
