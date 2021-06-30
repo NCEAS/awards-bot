@@ -85,7 +85,7 @@ create_ticket_and_send_initial_correspondence <- function(awards_db, database_pa
   }
   
   #send summary of tickets created
-  if(nrow(db) > 0) {
+  if(nrow(db) >= 0) {
     out <- sprintf('I created %s new ticket(s) today', nrow(db))	
     slackr::slackr_bot(out)	
   }
