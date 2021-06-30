@@ -1,0 +1,41 @@
+---
+title: "Mail merge new correspondences"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{mail merge}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(magrittr)
+```
+
+```{r setup}
+library(awardsBot)
+```
+
+```{r echo=TRUE}
+db <- import_awards_db(file.path(system.file('example_db.csv', package = 'awardsBot')))
+```
+
+```{r, echo = F}
+knitr::kable(db)
+```
+
+
+Add some kind of template text where `%s` will be replaced by the `pi_name`, `id` and `title`. Use `\n` for line breaks and `test = TRUE` to check out the formatting before sending. 
+
+```{r eval=FALSE}
+create_new_ticket_correspondence(db = db, 
+                                 "Dear %s, 
+                                 \n We are writing to you today about your NSF Arctic Sciences award %s %s. 
+                                 \n The Arctic Data Center Support Team", 
+                                 test = TRUE)
+```
+
+

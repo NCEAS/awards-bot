@@ -25,7 +25,10 @@ Imports:
   XML (>= 3.99-0.5),
   xml2 (>= 1.3.2)
 Suggests: 
-  testthat
+    rmarkdown,
+    knitr,
+    testthat
 Remotes: 
   NCEAS/rt
 RoxygenNote: 7.1.1
+VignetteBuilder: knitr

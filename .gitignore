@@ -4,3 +4,4 @@
 .Ruserdata
 *.csv
 *.DS_Store
+inst/doc

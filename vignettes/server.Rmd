@@ -1,0 +1,80 @@
+---
+title: "Server installation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Server installation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = F
+)
+```
+
+## Pre-requisites
+- sudo privlidges (or working with someone with privs)
+
+## Create a new release of the bot
+1. Do the usual pull, add, commit push workflow
+2. Once you are happy with the changes and want to create a release at this point, figure out what release we are on. In the terminal type:
+```{bash}
+git tag
+```
+
+3. Create a lightweight tag of the next number in the sequence
+
+Where version numbers typically follow the pattern of MAJOR.MINOR.PATCH (more info on [semantic versioning](https://semver.org/)) and incrementally adding versions as so:
+
+    > MAJOR version when you make incompatible API changes,
+    > MINOR version when you add functionality in a backwards compatible manner, and
+    > PATCH version when you make backwards compatible bug fixes.
+
+```{bash}
+git tag #.#.#
+```
+
+4. Push the tag on to Github
+```{bash}
+git push origin --tags
+```
+
+5. Go to github and click `releases` (on the sidebar on the right hand side)
+6. Click the `draft a new release` 
+7. In the tag version space add the version you just created and add a description and title
+8. Publish the release
+
+For more info see the [Git basis -Tagging](https://git-scm.com/book/en/v2/Git-Basics-Tagging)
+
+## Update and install awards bot on the server
+
+1. sudo to the bot (screen -x if doing this collaboratively)
+2. `curl -L paste-url-to-github-release-here`
+3. Update R package on server
+```{r}
+install_github("NCEAS/awards-bot@version_number")
+```
+
+4. unzip the file:
+```{bash}
+unzip awards-bot-verion.zip
+```
+
+5. remove previous symlink:
+```{bash}
+rm awards-bot
+```
+
+6. Create new symlink:
+```{bash}
+ln -s awardsbot-version awards-bot
+```
+
+7. Create a copy of the current `main_cron_script.R` and name it using the current date
+8. Copy the `main_cron_script.R` from awards-bot for the latest version
+9. Check to see if the date is correct in the `LASTRUN` file
+10. Do a test by just running `Rscript main_cron_script` (or copy the line from the crontab)
+11. Un-comment out the line in the cron job if the script test is fine
