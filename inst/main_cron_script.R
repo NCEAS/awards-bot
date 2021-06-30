@@ -1,6 +1,6 @@
-library(dplyr)
+suppressMessages(library(dplyr))
 library(httr)
-library(lubridate)
+suppressMessages(library(lubridate))
 library(magrittr)
 library(RCurl)
 library(rt)
