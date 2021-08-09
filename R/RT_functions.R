@@ -79,7 +79,7 @@ create_ticket_and_send_initial_correspondence <- function(awards_db, database_pa
     db$contact_initial[i] <- as.character(Sys.Date())
     
     # re-merge temporary database into permanent
-    awards_db[i,] <- db[i,]
+    awards_db[indicies[i],] <- db[i,]
     #save the result inbetween
     utils::write.csv(awards_db, file = database_path, row.names = FALSE)
   }
@@ -112,7 +112,7 @@ send_annual_report_correspondence <- function(awards_db, database_path) {
     db$contact_annual_report_previous[i] <- db$contact_annual_report_next[i]
     
     # re-merge temporary database into permanent
-    awards_db[i,] <- db[i, ]
+    awards_db[indicies[i],] <- db[i, ]
     #save the result inbetween
     utils::write.csv(awards_db, file = database_path, row.names = FALSE)
   }
@@ -148,7 +148,7 @@ send_aon_correspondence <- function(awards_db, database_path){
     db$contact_aon_previous[i] <- db$contact_aon_next[i]
     
     # re-merge temporary database into permanent
-    awards_db[i,] <- db[i, ]
+    awards_db[indicies[i],] <- db[i, ]
     #save the result inbetween
     utils::write.csv(awards_db, file = database_path, row.names = FALSE)
   }
@@ -181,7 +181,7 @@ send_one_month_remaining_correspondence <- function(awards_db, database_path) {
     db$contact_1mo[i] <- as.character(Sys.Date())
     
     # re-merge temporary database into permanent
-    awards_db[i,] <- db[i, ]
+    awards_db[indicies[i],] <- db[i, ]
     #save the result inbetween
     utils::write.csv(awards_db, file = database_path, row.names = FALSE)
   }
