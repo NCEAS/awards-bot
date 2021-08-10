@@ -2,14 +2,14 @@
 % Please edit documentation in R/RT_functions.R
 \name{create_new_ticket_correspondence}
 \alias{create_new_ticket_correspondence}
-\title{Generalized version of the create_ticket and send correspondence function}
+\title{Generalized version of the create_ticket and send_correspondences function}
 \usage{
 create_new_ticket_correspondence(db, template, test = TRUE)
 }
 \arguments{
 \item{db}{(dataframe) a database containing the name and email for follow up with the following column named: first_name, id, title}
 
-\item{template}{(character)}
+\item{template}{(character) an email template that will fill in the name and award title at each %s (see example below)}
 
 \item{test}{(logical) sends a test email (replaces all the emails with a test email address)}
 }
