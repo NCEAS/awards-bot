@@ -294,11 +294,11 @@ check_rt_login <- function(rt_base) {
 #' @examples 
 #' \dontrun{
 #' db <- import_awards_db(file.path(system.file('example_db.csv', package = 'awardsBot')))
+#' email_text <-  "Dear %s,  \n We are writing to you today about your NSF Arctic Sciences award %s %s. 
+#'                 \n The Arctic Data Center Support Team"
 #' create_new_ticket_correspondence(db = db, 
-#'                                  "Dear %s, 
-#'                                  \n We are writing to you today about your NSF Arctic Sciences award %s %s. 
-#'                                  \n The Arctic Data Center Support Team", 
-#'                                  test = TRUE)
+#'                                 email_text, 
+#'                                 test = TRUE)
 #' }
 create_new_ticket_correspondence <- function(db, template, test = TRUE) {
   
