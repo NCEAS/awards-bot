@@ -65,10 +65,10 @@ create_dummy_database <- function() {
   #make 2  more rows
   db <- rbind(db[1,], db[1,], db[1,])
   
-  db$id[2] <- "7654321"
+  db$id[1] <- "7654321"
   db$id[3] <- "9999999"
   
-  db$active_award_flag[1] <- "yes"
+  db$active_award_flag[2] <- "yes"
   
   return(db)
 }
