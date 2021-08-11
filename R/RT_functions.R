@@ -300,15 +300,14 @@ check_rt_login <- function(rt_base) {
 #'                                  \n The Arctic Data Center Support Team", 
 #'                                  test = TRUE)
 #' }
-
 create_new_ticket_correspondence <- function(db, template, test = TRUE) {
   
   for (i in seq_len(nrow(db))) {
 
     if(test){
-      db$rt_ticket[i] <- awardsBot:::create_ticket(db$id[i], "jasminelai@nceas.ucsb.edu")
+      db$rt_ticket[i] <- create_ticket(db$id[i], "jasminelai@nceas.ucsb.edu")
     } else {
-      db$rt_ticket[i] <- awardsBot:::create_ticket(db$id[i], db$pi_email[i])
+      db$rt_ticket[i] <- create_ticket(db$id[i], db$pi_email[i])
     }
     
     
@@ -322,7 +321,7 @@ create_new_ticket_correspondence <- function(db, template, test = TRUE) {
                           db$id[i],
                           db$title[i])
     
-    reply <- awardsBot:::check_rt_reply(db$rt_ticket[i], email_text)
+    reply <- check_rt_reply(db$rt_ticket[i], email_text)
 
     db$contact_initial[i] <- as.character(Sys.Date())
     
