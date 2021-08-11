@@ -284,7 +284,7 @@ check_rt_login <- function(rt_base) {
 #' Similar to a mail merge for sending mass emails to RT.
 #'
 #' @param db (dataframe) a database containing the name and email for follow up with the following column named: first_name, id, title
-#' @param template (character) an email template that will fill in the name and award title at each %s (see example below)
+#' @param template (character) an email template that will fill in the name and award title at each \%s (see example below)
 #' @param test (logical) sends a test email (replaces all the emails with a test email address)
 #' 
 #'

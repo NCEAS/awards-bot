@@ -32,7 +32,7 @@ test_main(
 \item{email}{The email to send the tickets to}
 }
 \value{
-
+nothing
 }
 \description{
 Test main function
