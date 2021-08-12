@@ -60,6 +60,15 @@ create_dummy_database <- function() {
   db$fund_program_name <- 'ARCTIC NATURAL SCIENCES'
   db$id <- '1234567'  # NSF award number 
   db$start_date <- '2016-01-01'
+  db$active_award_flag <- "no"
+  
+  #make 2  more rows
+  db <- rbind(db[1,], db[1,], db[1,])
+  
+  db$id[1] <- "7654321"
+  db$id[3] <- "9999999"
+  
+  db$active_award_flag[2] <- "yes"
   
   return(db)
 }

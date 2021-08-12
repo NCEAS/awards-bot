@@ -79,7 +79,7 @@ create_ticket_and_send_initial_correspondence <- function(awards_db, database_pa
     db$contact_initial[i] <- as.character(Sys.Date())
     
     # re-merge temporary database into permanent
-    awards_db[i,] <- db[i,]
+    awards_db[indices[i],] <- db[i,]
     #save the result inbetween
     utils::write.csv(awards_db, file = database_path, row.names = FALSE)
   }
@@ -112,7 +112,7 @@ send_annual_report_correspondence <- function(awards_db, database_path) {
     db$contact_annual_report_previous[i] <- db$contact_annual_report_next[i]
     
     # re-merge temporary database into permanent
-    awards_db[i,] <- db[i, ]
+    awards_db[indices[i],] <- db[i, ]
     #save the result inbetween
     utils::write.csv(awards_db, file = database_path, row.names = FALSE)
   }
@@ -148,7 +148,7 @@ send_aon_correspondence <- function(awards_db, database_path){
     db$contact_aon_previous[i] <- db$contact_aon_next[i]
     
     # re-merge temporary database into permanent
-    awards_db[i,] <- db[i, ]
+    awards_db[indices[i],] <- db[i, ]
     #save the result inbetween
     utils::write.csv(awards_db, file = database_path, row.names = FALSE)
   }
@@ -181,7 +181,7 @@ send_one_month_remaining_correspondence <- function(awards_db, database_path) {
     db$contact_1mo[i] <- as.character(Sys.Date())
     
     # re-merge temporary database into permanent
-    awards_db[i,] <- db[i, ]
+    awards_db[indices[i],] <- db[i, ]
     #save the result inbetween
     utils::write.csv(awards_db, file = database_path, row.names = FALSE)
   }
@@ -284,7 +284,7 @@ check_rt_login <- function(rt_base) {
 #' Similar to a mail merge for sending mass emails to RT.
 #'
 #' @param db (dataframe) a database containing the name and email for follow up with the following column named: first_name, id, title
-#' @param template (character) an email template that will fill in the name and award title at each %s (see example below)
+#' @param template (character) an email template that will fill in the name and award title at each \%s (see example below)
 #' @param test (logical) sends a test email (replaces all the emails with a test email address)
 #' 
 #'
@@ -294,21 +294,20 @@ check_rt_login <- function(rt_base) {
 #' @examples 
 #' \dontrun{
 #' db <- import_awards_db(file.path(system.file('example_db.csv', package = 'awardsBot')))
+#' email_text <-  "Dear %s,  \n We are writing to you today about your NSF Arctic Sciences award %s %s. 
+#'                 \n The Arctic Data Center Support Team"
 #' create_new_ticket_correspondence(db = db, 
-#'                                  "Dear %s, 
-#'                                  \n We are writing to you today about your NSF Arctic Sciences award %s %s. 
-#'                                  \n The Arctic Data Center Support Team", 
-#'                                  test = TRUE)
+#'                                 email_text, 
+#'                                 test = TRUE)
 #' }
-
 create_new_ticket_correspondence <- function(db, template, test = TRUE) {
   
   for (i in seq_len(nrow(db))) {
 
     if(test){
-      db$rt_ticket[i] <- awardsBot:::create_ticket(db$id[i], "jasminelai@nceas.ucsb.edu")
+      db$rt_ticket[i] <- create_ticket(db$id[i], "jasminelai@nceas.ucsb.edu")
     } else {
-      db$rt_ticket[i] <- awardsBot:::create_ticket(db$id[i], db$pi_email[i])
+      db$rt_ticket[i] <- create_ticket(db$id[i], db$pi_email[i])
     }
     
     
@@ -322,7 +321,7 @@ create_new_ticket_correspondence <- function(db, template, test = TRUE) {
                           db$id[i],
                           db$title[i])
     
-    reply <- awardsBot:::check_rt_reply(db$rt_ticket[i], email_text)
+    reply <- check_rt_reply(db$rt_ticket[i], email_text)
 
     db$contact_initial[i] <- as.character(Sys.Date())
     

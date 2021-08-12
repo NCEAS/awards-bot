@@ -7,7 +7,7 @@
 #' @param initial_aon_offset (numeric)Number of months after award startDate to send first AON data due reminder
 #' @param aon_recurring_interval (numeric) Number of months to send recurring emails for AON data due
 #'
-#' @return
+#' @return nothing
 #' @export
 #'
 #' @examples
@@ -53,7 +53,7 @@ main <- function(database_path = Sys.getenv('DATABASE_PATH'),
 #' @param aon_recurring_interval (numeric) Number of months to send recurring emails for AON data due
 #' @param email The email to send the tickets to
 #'
-#' @return
+#' @return nothing
 #' @export
 #'
 #' @examples

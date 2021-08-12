@@ -27,7 +27,7 @@ main(
 \item{aon_recurring_interval}{(numeric) Number of months to send recurring emails for AON data due}
 }
 \value{
-
+nothing
 }
 \description{
 main function
