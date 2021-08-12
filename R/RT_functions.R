@@ -106,8 +106,19 @@ send_annual_report_correspondence <- function(awards_db, database_path) {
     email_text <- sprintf(template,
                           db$pi_first_name[i])
     
+    #deals with cases where an initial ticket was not created
+    if(is.na(db$rt_ticket[i])){
+      # Create RT ticket
+      db$rt_ticket[i] <- create_ticket(db$id[i], db$pi_email[i])
+      
+      if (db$rt_ticket[i] == 'rt_ticket_create_error') {
+        next 
+      }
+      
+    }
+    
     reply <- check_rt_reply(db$rt_ticket[i], email_text)
-
+    
     # Update last contact date
     db$contact_annual_report_previous[i] <- db$contact_annual_report_next[i]
     
@@ -142,6 +153,17 @@ send_aon_correspondence <- function(awards_db, database_path){
     email_text <- sprintf(template,
                           db$pi_first_name[i])
     
+    #deals with cases where an initial ticket was not created
+    if(is.na(db$rt_ticket[i])){
+      # Create RT ticket
+      db$rt_ticket[i] <- create_ticket(db$id[i], db$pi_email[i])
+      
+      if (db$rt_ticket[i] == 'rt_ticket_create_error') {
+        next 
+      }
+      
+    }
+    
     reply <- check_rt_reply(db$rt_ticket[i], email_text)
     
     # Update last contact date
@@ -174,6 +196,16 @@ send_one_month_remaining_correspondence <- function(awards_db, database_path) {
                           db$pi_first_name[i],
                           db$id[i],
                           db$title[i])
+    
+    if(is.na(db$rt_ticket[i])){
+      # Create RT ticket
+      db$rt_ticket[i] <- create_ticket(db$id[i], db$pi_email[i])
+      
+      if (db$rt_ticket[i] == 'rt_ticket_create_error') {
+        next 
+      }
+      
+    }
     
     reply <- check_rt_reply(db$rt_ticket[i], email_text)
     
@@ -237,6 +269,25 @@ check_rt_reply <- function(ticket_number, email) {
   
   return(ticket)
 } 
+
+## helper function to 
+reply_rt_ticket <- function(){
+  
+  
+  if(is.na(db$rt_ticket[i])){
+    # Create RT ticket
+    db$rt_ticket[i] <- create_ticket(db$id[i], db$pi_email[i])
+    
+    if (db$rt_ticket[i] == 'rt_ticket_create_error') {
+      next 
+    }
+    
+    reply <- check_rt_reply(db$rt_ticket[i], email_text)
+    
+  } else {
+    reply <- check_rt_reply(db$rt_ticket[i], email_text)
+  }
+}
 
 ## helper function to read in email templates
 read_file <- function(path) {
