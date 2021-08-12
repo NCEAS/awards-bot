@@ -111,10 +111,6 @@ send_annual_report_correspondence <- function(awards_db, database_path) {
       # Create RT ticket
       db$rt_ticket[i] <- create_ticket(db$id[i], db$pi_email[i])
       
-      if (db$rt_ticket[i] == 'rt_ticket_create_error') {
-        next 
-      }
-      
     }
     
     reply <- check_rt_reply(db$rt_ticket[i], email_text)
@@ -158,10 +154,6 @@ send_aon_correspondence <- function(awards_db, database_path){
       # Create RT ticket
       db$rt_ticket[i] <- create_ticket(db$id[i], db$pi_email[i])
       
-      if (db$rt_ticket[i] == 'rt_ticket_create_error') {
-        next 
-      }
-      
     }
     
     reply <- check_rt_reply(db$rt_ticket[i], email_text)
@@ -200,10 +192,6 @@ send_one_month_remaining_correspondence <- function(awards_db, database_path) {
     if(is.na(db$rt_ticket[i])){
       # Create RT ticket
       db$rt_ticket[i] <- create_ticket(db$id[i], db$pi_email[i])
-      
-      if (db$rt_ticket[i] == 'rt_ticket_create_error') {
-        next 
-      }
       
     }
     
@@ -269,25 +257,6 @@ check_rt_reply <- function(ticket_number, email) {
   
   return(ticket)
 } 
-
-## helper function to 
-reply_rt_ticket <- function(){
-  
-  
-  if(is.na(db$rt_ticket[i])){
-    # Create RT ticket
-    db$rt_ticket[i] <- create_ticket(db$id[i], db$pi_email[i])
-    
-    if (db$rt_ticket[i] == 'rt_ticket_create_error') {
-      next 
-    }
-    
-    reply <- check_rt_reply(db$rt_ticket[i], email_text)
-    
-  } else {
-    reply <- check_rt_reply(db$rt_ticket[i], email_text)
-  }
-}
 
 ## helper function to read in email templates
 read_file <- function(path) {
