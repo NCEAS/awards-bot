@@ -58,6 +58,8 @@ For more info see the [Git basis -Tagging](https://git-scm.com/book/en/v2/Git-Ba
 install_github("NCEAS/awards-bot@version_number")
 ```
 
+**Note** - the way this package is named is inconsistent - the package is call `awardsBot` while the repository is `awards-bot`
+
 4. unzip the file:
 ```{bash}
 unzip awards-bot-verion.zip
