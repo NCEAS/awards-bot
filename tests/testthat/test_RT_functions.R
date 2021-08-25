@@ -14,7 +14,7 @@ test_that('we can create an RT ticket', {
   db <- create_dummy_database()
   
   #does not return ticket but creates ticket
-  ticket <- create_ticket(db$id, db$pi_email)
+  ticket <- create_ticket(db$id[1], db$pi_email[1])
   
   expect_type(ticket, 'double')
 })
@@ -41,12 +41,12 @@ test_that('we can send an annual report correspondence', {
   db$contact_annual_report_next[2] <- as.character(Sys.Date())
   db <- send_annual_report_correspondence(db, database_path = db_path)
   
-  #No previous ticket
+  #Scenario where there is no previous ticket
   expect_type(db$rt_ticket[2], "double")
   
   db <- send_annual_report_correspondence(db, database_path = db_path)
   
-  #has a RT ticket already
+  #Scenario where there is a RT ticket already
   expect_equal(db$contact_annual_report_next[2], db$contact_annual_report_previous[2])
 })
 
@@ -60,12 +60,12 @@ test_that('we can send a one month remaining correspondence',{
   # Set expiration date to one month from now
   db$contact_1mo <- as.character(Sys.Date())
   
-  #No previous ticket
+  #Scenario where there is no previous ticket
   db <- send_one_month_remaining_correspondence(db, database_path = db_path)
   
   expect_type(db$rt_ticket[2], "double")
   
-  #has a RT ticket already
+  #Scenario where there is a RT ticket already
   db <- send_one_month_remaining_correspondence(db, database_path = db_path)
   
   expect_equal(db$contact_1mo[2], as.character(Sys.Date()))
@@ -79,11 +79,12 @@ test_that('we can send an aon correspondence', {
   db <- create_dummy_database()
   db$contact_aon_next[2] <- as.character(Sys.Date())
   
-  #No previous ticket
+  #Scenario where there is no previous ticket
   db <- send_aon_correspondence(db, database_path = db_path)
   
   expect_type(db$rt_ticket[2], "double")
   
+  #Scenario where there is a previous ticket
   db <- send_aon_correspondence(db, database_path = db_path)
   
   expect_equal(db$contact_aon_previous, db$contact_aon_next)
