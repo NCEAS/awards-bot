@@ -4,7 +4,7 @@
 The NSF awards bot regularly contacts principal investigators with reminders on their project specific deadlines.  Please read the [schedule readme](https://github.com/NCEAS/awards-bot/tree/master/inst/emails) for more detailed information on automated correspondences.
 
 ## How the bot works 
-Every 24 hours the bot queries NSF's award [API](https://www.research.gov/common/webapi/awardapisearch-v1.htm) for newly awarded grants and stores this information in a pre-existing database.  When it finds a new award it creates a new ticket in [Request Tracker](https://bestpractical.com/request-tracker/) and sends an initial correspondence that outlines project-specific expectations and deadlines.  It sends reminders to submit annual reports, submit data for Arctic Observing Network (AON) projects, and that the award is expiring soon.  The bot sends error messages to a slack channel. 
+Every 24 hours the bot queries NSF's award [API](https://www.research.gov/common/webapi/awardapisearch-v1.htm) for newly awarded grants and stores this information in a pre-existing database.  When it finds a new award it creates a new ticket in [Request Tracker](https://bestpractical.com/request-tracker/) and sends an initial correspondence that outlines project-specific expectations and deadlines.  It sends reminders to submit annual reports, submit data for Arctic Observing Network (AON) projects, and that the award is expiring soon.  The bot sends a summary of the number of each type of correspondence sent and error messages to a slack channel. 
 
 ## Setup
 - Copy the bot [cron script](https://github.com/NCEAS/awards-bot/blob/master/inst/main_cron_script.R) to a directory 
@@ -24,7 +24,7 @@ Every 24 hours the bot queries NSF's award [API](https://www.research.gov/common
   AON_RECURRING_INTERVAL=6                 # Number of months to send recurring emails for AON data due
   ```
 
-**Note** - please contact Chris for set up in Linux
+- see the `server` vignette for more details
 
 ## Running 
 Run the bot [cron script](https://github.com/NCEAS/awards-bot/blob/master/inst/main_cron_script.R) every 24 hours.    
