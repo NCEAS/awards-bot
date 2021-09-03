@@ -22,7 +22,7 @@ rt::rt_login(Sys.getenv("RT_USER"), Sys.getenv("RT_PASSWORD"), Sys.getenv("RT_BA
 
 slackr::slackr_setup(channel = "#awardbot", username = 'awardbot',
                      incoming_webhook_url = Sys.getenv("SLACK_WEBHOOK_URL"),
-                     bot_user_oauth_token = Sys.getenv("SLACK_OAUTH_TOKEN"))
+                     token = Sys.getenv("SLACK_OAUTH_TOKEN"))
 #check awards
 awardsBot::main()
 

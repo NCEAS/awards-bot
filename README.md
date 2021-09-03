@@ -64,7 +64,7 @@ Please follow this closely so no emails are sent to researchers by mistake while
   RT_PASSWORD="your_rt_password"               # Your RT password
 ```
 
-2. Set up slackbot: `slackr::slackr_setup(channel = "#awardbot", username = 'awardbot', incoming_webhook_url = Sys.getenv("SLACK_WEBHOOK_URL"), bot_user_oauth_token = Sys.getenv("SLACK_OAUTH_TOKEN"))`
+2. Set up slackbot: `slackr::slackr_setup(channel = "#awardbot", username = 'awardbot', incoming_webhook_url = Sys.getenv("SLACK_WEBHOOK_URL"), token = Sys.getenv("SLACK_OAUTH_TOKEN"))`
 
 3. Login to RT: `rt::rt_login()`
 
