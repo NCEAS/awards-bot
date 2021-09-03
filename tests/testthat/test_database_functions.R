@@ -78,8 +78,12 @@ test_that('we can save the last time the bot ran', {
   expect_equal(readLines(file_path), 'text to save')
 })
 
+test_that('get award works and does not produce duplicates', {
+  nsf_awards <- awardsBot::get_awards(from_date = '06/25/2021', to_date = "09/02/2021")
+  
+  expect_equal(nsf_awards$id, unique(nsf_awards$id))
+})
+
 test_that('update_contact_dates wrapper works', {})
-
-
 
 

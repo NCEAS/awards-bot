@@ -315,7 +315,7 @@ get_awards <- function(from_date = NULL,
     n <- n + 1
   }
   
-  return(xml_df1)
+  return(dplyr::distinct(xml_df1, id, .keep_all = T))
 }
 
 # TODO make a check_database() function
