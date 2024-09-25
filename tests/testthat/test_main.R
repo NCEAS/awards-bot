@@ -5,10 +5,10 @@ test_that('main sends correspondences and updates the database', {
     skip('Not logged in to RT. Skipping Test.')
   }
   
-  # slack_login is NULL if the message sends 
+  # if slack_login is FALSE, the message did not send 
   slack_login <- tryCatch(slackr::slackr_bot('Testing awardsBot::main function'),
-                          error = function(e) return(TRUE))
-  if (!is.null(slack_login)) {
+                          error = function(e) return(FALSE))
+  if (identical(slack_login, FALSE)) {
     skip('Slack not configured. Skipping Test.')
   }
   
